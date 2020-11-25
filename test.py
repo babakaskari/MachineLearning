@@ -35,10 +35,16 @@ df8["Leak Found"] = df8["Leak Found"].fillna(-1)
 dataset = df8
 dataset["Leak Found"].replace(["Y", "N", "N-PRV"], [1, 0, -2], inplace=True)
 dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
+dataset1 = dataset
+dataset = dataset1.drop(['Leak Alarm'], axis=1)
 print("dataset : ", dataset)
 print(dataset.isna().sum())
+# corrolation matrix
+print("Features : ", dataset.columns.values)
+
+""""
 fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(8, 8))
-# corrolation
+
 corr = dataset[["value_Lvl", "Leak Found"]].corr()
 print(corr)
 sns.heatmap(corr, annot=True, cmap="YlGnBu", ax=axs[0, 0])
@@ -47,9 +53,14 @@ corr = dataset[["value_Spr", "Leak Found"]].corr()
 print(corr)
 sns.heatmap(corr, annot=True, cmap="YlGnBu", ax=axs[0, 1])
 
-corr = dataset[["Leak Alarm", "Leak Found"]].corr()
-print(corr)
-sns.heatmap(corr, annot=True, cmap="YlGnBu", ax=axs[1, 0])
+# corr = dataset[["Leak Alarm", "Leak Found"]].corr()
+# print(corr)
+# sns.heatmap(corr, annot=True, cmap="YlGnBu", ax=axs[1, 0])
 
 plt.show()
+"""
 
+df = pd.DataFrame(dataset, columns=['value_Lvl', 'value_Spr', 'Leak Found'])
+corrMatrix = df.corr()
+sns.heatmap(corrMatrix, annot=True)
+plt.show()
