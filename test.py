@@ -62,5 +62,5 @@ plt.show()
 
 df = pd.DataFrame(dataset, columns=['value_Lvl', 'value_Spr', 'Leak Found'])
 corrMatrix = df.corr()
-sns.heatmap(corrMatrix, annot=True)
+sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 plt.show()
