@@ -60,7 +60,7 @@ sns.heatmap(corr, annot=True, cmap="YlGnBu", ax=axs[0, 1])
 plt.show()
 """
 
-df = pd.DataFrame(dataset, columns=['value_Lvl', 'value_Spr', 'Leak Found'])
+df = pd.DataFrame(dataset, columns=['ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
 corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 plt.show()
