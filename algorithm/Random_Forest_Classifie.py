@@ -46,7 +46,7 @@ df7 = df7.rename(columns={'Date Visited': 'Date'})
 df8 = pd.merge(df6, df7, on=['ID', 'Date'], how='left')
 df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
 df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
-df8["Leak Found"] = df8["Leak Found"].fillna(-1)
+df8["Leak Found"] = df8["Leak Found"].fillna(0)
 dataset = df8
 indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
 # Delete these row indexes from dataFrame
@@ -82,6 +82,13 @@ print("Model score is : ", clf.score(x_test, y_test))
 # print(np.mean(y_test == y_pred))
 pred_probality = clf.predict_proba(x_test)
 print("Predict probability : ", pred_probality)
+# cross_validation score
+cross_validation_score = cross_val_score(clf, x_train, y_train, cv=5)
+print("Cross validation score : ", cross_validation_score)
+cross_validation_predict = cross_val_predict(clf, x_train, y_train, cv=5)
+print("Cross validation predict : ", cross_validation_score)
+cross_val_accuracy = np.mean(cross_validation_score) * 100
+print("cross validation accuracy : ", cross_val_accuracy)
 # ROC
 print("pred_probality : ", pred_probality, "length of prediction prob : ", len(pred_probality))
 y_probs_positive = pred_probality[:, 1]
