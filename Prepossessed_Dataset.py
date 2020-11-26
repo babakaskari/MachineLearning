@@ -45,26 +45,16 @@ print(dataset.isna().sum())
 print("Features : ")
 print(dataset.columns.values)
 
-""""
-fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(8, 8))
-
-corr = dataset[["value_Lvl", "Leak Found"]].corr()
-print(corr)
-sns.heatmap(corr, annot=True, cmap="YlGnBu", ax=axs[0, 0])
-
-corr = dataset[["value_Spr", "Leak Found"]].corr()
-print(corr)
-sns.heatmap(corr, annot=True, cmap="YlGnBu", ax=axs[0, 1])
-
-# corr = dataset[["Leak Alarm", "Leak Found"]].corr()
-# print(corr)
-# sns.heatmap(corr, annot=True, cmap="YlGnBu", ax=axs[1, 0])
-
-plt.show()
-"""
-
 df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
 corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 plt.show()
+leak_found = dataset["Leak Found"]
+dataset3 = dataset.drop(['Leak Alarm', 'Leak Found'], axis=1)
+x_train, x_test, y_train, y_test = train_test_split(dataset3, leak_found, stratify=leak_found, test_size=0.2)
+x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, stratify=y_train, test_size=0.2)
+print('Number of data points in train data:', x_train.shape[0])
+print('Number of data points in test data:', x_test.shape[0])
+print('Number of data points in test data:', x_cv.shape[0])
+
 
