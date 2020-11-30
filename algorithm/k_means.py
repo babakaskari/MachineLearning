@@ -76,7 +76,7 @@ x_test = tempdata.loc[3002:3010]
 print("x_train : ", x_train)
 print("x_test : ", x_test)
 
-kmeans = KMeans(n_clusters=2, init='k-means++',  max_iter=300, random_state=0).fit(x_train)
+kmeans = KMeans(n_clusters=2, init='k-means++',  max_iter=300, random_state=0, algorithm='auto').fit(x_train)
 y_pred = kmeans.predict(x_test)
 print("Prediction : ", y_pred)
 
