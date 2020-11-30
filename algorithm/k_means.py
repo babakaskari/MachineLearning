@@ -60,7 +60,7 @@ dataset1 = dataset
 dataset = dataset1.drop(['Leak Alarm'], axis=1)
 
 dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
-print("Number of null values in dataset : ", dataset.isna().sum())
+print("Number of null values in dataset :\n", dataset.isna().sum())
 # corrolation matrix
 print(dataset.columns.values)
 df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
