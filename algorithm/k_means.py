@@ -69,8 +69,9 @@ sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
 tempdata = dataset.drop(["Leak Found"], axis=1)
 print("tempdata : ", tempdata.shape[0])
-x_train = tempdata.loc[60:]
-print("x_train shape : ", x_train.shape)
+x_train = tempdata.loc[56:]
+x_train = x_train.sample(frac=1)
+# print("x_train shape : ", x_train.shape)
 x_test = tempdata.loc[3002:3010]
 print("x_train : ", x_train)
 print("x_test : ", x_test)
