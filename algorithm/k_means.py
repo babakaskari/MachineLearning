@@ -69,12 +69,14 @@ sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
 tempdata = dataset.drop(["Leak Found"], axis=1)
 print("tempdata : ", tempdata.shape[0])
-x_train = tempdata.loc[60:3000]
-y_train = tempdata.loc[3002:3009]
+x_train = tempdata.loc[60:]
+print("x_train shape : ", x_train.shape)
+x_test = tempdata.loc[3002:3010]
 print("x_train : ", x_train)
-print("y_train : ", y_train)
+print("x_test : ", x_test)
 
 kmeans = KMeans(n_clusters=2, init='k-means++',  max_iter=300, random_state=0).fit(x_train)
-print(kmeans.labels_)
-y_pred = kmeans.predict(y_train)
+y_pred = kmeans.predict(x_test)
 print("Prediction : ", y_pred)
+
+

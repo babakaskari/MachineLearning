@@ -68,7 +68,7 @@ sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
 tempdata = dataset
 dataset = dataset.sample(frac=1)
-dataset = dataset.loc[:10000]
+# dataset = dataset.loc[:10000]
 print("Number of null values in dataset : ", dataset.isna().sum())
 # print("dataset : ", dataset.shape[0])
 dataset2 = dataset.drop(["Leak Found"], axis=1)
@@ -91,5 +91,9 @@ label_prop_model.fit(x_train, y_train)
 print("Result:", metrics.accuracy_score(y_test, label_prop_model.predict(x_test)))
 print("Model score is : ", label_prop_model.score(x_test, y_test))
 
+label_prop_model = LabelPropagation(kernel="knn", gamma=20, n_neighbors=7, max_iter=5000)
+label_prop_model.fit(x_train, y_train)
 
+print("Result:", metrics.accuracy_score(y_test, label_prop_model.predict(x_test)))
+print("Model score is : ", label_prop_model.score(x_test, y_test))
 
