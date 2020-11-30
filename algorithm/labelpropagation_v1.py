@@ -67,15 +67,28 @@ corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
 tempdata = dataset
-dataset = dataset.loc[:3000]
-print("dataset : ", dataset.shape[0])
-x_train = dataset.drop(["Leak Found"], axis=1)
-y_train = dataset["Leak Found"]
-print("x_train : ", x_train)
-print("y_train : ", y_train)
+dataset = dataset.sample(frac=1)
+dataset = dataset.loc[:10000]
+print("Number of null values in dataset : ", dataset.isna().sum())
+# print("dataset : ", dataset.shape[0])
+dataset2 = dataset.drop(["Leak Found"], axis=1)
+leak_found = dataset["Leak Found"]
+# print("x_train : ", x_train)
+# print("y_train : ", y_train)
+x_train, x_test, y_train, y_test = train_test_split(dataset2,
+                                                    leak_found,
+                                                    stratify=leak_found,
+                                                    test_size=0.2,
+                                                    random_state=42)
+# x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, stratify=y_train, test_size=0.2, random_state=42)
+print('Number of data points in train data:', x_train.shape[0])
+print('Number of data points in test data:', x_test.shape[0])
+# print('Number of data points in test data:', x_cv.shape[0])
 
-label_prop_model = LabelPropagation(kernel="rbf", gamma=20, n_neighbors=7, max_iter=5000)
+label_prop_model = LabelPropagation(kernel="knn", gamma=20, n_neighbors=7, max_iter=5000)
 label_prop_model.fit(x_train, y_train)
+
+print("Result:", metrics.accuracy_score(y_test, label_prop_model.predict(x_test)))
 
 
 
