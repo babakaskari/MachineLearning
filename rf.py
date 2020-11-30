@@ -1,3 +1,4 @@
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,57 +23,25 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import roc_curve
+import prepossessed_dataset
 import seaborn as sns
 from sklearn import metrics
 sns.set()
+prepossessed_dataset.main()
+dataset = prepossessed_dataset.main()
 
-pd.set_option('mode.chained_assignment', None)
-
-df = pd.read_csv("../dataset/Acoustic Logger Data.csv")
-df1 = df.loc[df["LvlSpr"] == "Lvl"]
-df3 = df.loc[df["LvlSpr"] == "Spr"]
-df2 = pd.melt(df1, id_vars=['LvlSpr', 'ID'], value_vars=df.loc[:0, '02-May':].columns.values.tolist(), var_name='Date')
-df4 = pd.melt(df3, id_vars=['LvlSpr', 'ID'], value_vars=df.loc[:0, '02-May':].columns.values.tolist(), var_name='Date')
-df5 = pd.merge(df2, df4, on= ['ID', 'Date'], suffixes=("_Lvl", "_Spr"))
-df6 = df5.drop(['LvlSpr_Lvl', 'LvlSpr_Spr'], axis=1).dropna()
-df6['Date'] = pd.to_datetime(df6['Date'], format='%d-%b')
-df6['Date'] = df6['Date'].dt.strftime('%d-%m')
-
-df7 = pd.read_csv("../dataset/Leak Alarm Results.csv")
-df7['Date Visited'] = pd.to_datetime(df7['Date Visited'], format='%d/%m/%Y')
-df7['Date Visited'] = df7['Date Visited'].dt.strftime('%d-%m')
-df7 = df7.rename(columns={'Date Visited': 'Date'})
-
-df8 = pd.merge(df6, df7, on=['ID', 'Date'], how='left')
-df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
-df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
-df8["Leak Found"] = df8["Leak Found"].fillna(-1)
-dataset = df8
-indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
-# Delete these row indexes from dataFrame
-dataset.drop(indexNames, inplace=True)
-dataset["Leak Found"].replace(["Y", "N"], [1, 0], inplace=True)
-dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
-dataset1 = dataset
-dataset = dataset1.drop(['Leak Alarm'], axis=1)
-
-dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
-print(dataset)
-print(dataset.isna().sum())
-# corrolation matrix
-print("Features : ")
-print(dataset.columns.values)
-df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
-corrMatrix = df.corr()
-sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
-plt.show()
-leak_found = dataset["Leak Found"]
-dataset3 = dataset.drop(['Leak Found'], axis=1)
-x_train, x_test, y_train, y_test = train_test_split(dataset3, leak_found, stratify=leak_found, test_size=0.2)
-x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, stratify=y_train, test_size=0.2)
+print("x_train  :  ", dataset["x_train"])
+print("y_train  :  ", dataset["y_train"])
+x_train = dataset["x_train"]
+y_train = dataset["y_train"]
+x_test = dataset["x_test"]
+y_test = dataset["y_test"]
+x_cv = dataset["x_cv"]
+y_cv = dataset["y_cv"]
 print('Number of data points in train data:', x_train.shape[0])
 print('Number of data points in test data:', x_test.shape[0])
 print('Number of data points in test data:', x_cv.shape[0])
+
 clf = RandomForestClassifier(n_estimators=100, criterion='gini', max_depth=20, random_state=42, n_jobs=-1)
 clf.fit(x_train, y_train)
 y_pred = clf.predict(x_test)

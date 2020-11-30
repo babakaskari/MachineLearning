@@ -22,6 +22,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import roc_curve
+from sklearn.semi_supervised import LabelPropagation
 import seaborn as sns
 from sklearn import metrics
 sns.set()
@@ -45,36 +46,41 @@ df7 = df7.rename(columns={'Date Visited': 'Date'})
 
 df8 = pd.merge(df6, df7, on=['ID', 'Date'], how='left')
 df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
-df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
+# df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
 df8["Leak Found"] = df8["Leak Found"].fillna(-1)
 dataset = df8
 indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
 # Delete these row indexes from dataFrame
-dataset.drop(indexNames, inplace=True)
+dataset.drop(indexNames, index=None, inplace=True)
+dataset.reset_index(inplace=True)
 dataset["Leak Found"].replace(["Y", "N"], [1, 0], inplace=True)
-dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
+# dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
 dataset1 = dataset
 dataset = dataset1.drop(['Leak Alarm'], axis=1)
 
 dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
-print(dataset)
-print(dataset.isna().sum())
+print("Number of null values in dataset : ", dataset.isna().sum())
 # corrolation matrix
-print("Features : ")
 print(dataset.columns.values)
 df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
 corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
-plt.show()
-leak_found = dataset["Leak Found"]
-dataset3 = dataset.drop(['Leak Found'], axis=1)
-x_train, x_test, y_train, y_test = train_test_split(dataset3, leak_found, stratify=leak_found, test_size=0.2)
-x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, stratify=y_train, test_size=0.2)
-print('Number of data points in train data:', x_train.shape[0])
-print('Number of data points in test data:', x_test.shape[0])
-print('Number of data points in test data:', x_cv.shape[0])
-clf = RandomForestClassifier(n_estimators=100, criterion='gini', max_depth=20, random_state=42, n_jobs=-1)
-clf.fit(x_train, y_train)
+# plt.show()
+tempdata = dataset
+dataset = dataset.loc[:3000]
+print("dataset : ", dataset.shape[0])
+x_train = dataset.drop(["Leak Found"], axis=1)
+y_train = dataset["Leak Found"]
+print("x_train : ", x_train)
+print("y_train : ", y_train)
+
+label_prop_model = LabelPropagation(kernel="rbf", gamma=20, n_neighbors=7, max_iter=5000)
+label_prop_model.fit(x_train, y_train)
+
+
+
+
+""""
 y_pred = clf.predict(x_test)
 print("Prediction : ", y_pred)
 print("Score:", metrics.accuracy_score(y_test, y_pred))
@@ -103,3 +109,4 @@ plt.ylabel("True positive rate (tpr)")
 plt.title("Receiver Operating Characteristic (ROC) Curve")
 plt.legend()
 plt.show()
+"""
