@@ -78,36 +78,3 @@ kmeans = KMeans(n_clusters=2, init='k-means++',  max_iter=300, random_state=0).f
 print(kmeans.labels_)
 y_pred = kmeans.predict(y_train)
 print("Prediction : ", y_pred)
-
-
-
-""""
-y_pred = clf.predict(x_test)
-print("Prediction : ", y_pred)
-print("Score:", metrics.accuracy_score(y_test, y_pred))
-print("Model score is : ", clf.score(x_test, y_test))
-# print(np.mean(y_test == y_pred))
-pred_probality = clf.predict_proba(x_test)
-print("Predict probability : ", pred_probality)
-# cross_validation score
-cross_validation_score = cross_val_score(clf, x_train, y_train, cv=5)
-print("Cross validation score : ", cross_validation_score)
-cross_validation_predict = cross_val_predict(clf, x_train, y_train, cv=5)
-print("Cross validation predict : ", cross_validation_score)
-cross_val_accuracy = np.mean(cross_validation_score) * 100
-print("cross validation accuracy : ", cross_val_accuracy)
-# ROC
-print("pred_probality : ", pred_probality, "length of prediction prob : ", len(pred_probality))
-y_probs_positive = pred_probality[:, 1]
-print("y_probs_positive : ", y_probs_positive)
-fpr, tpr, thresholds = roc_curve(y_test, y_probs_positive)
-print("fpr : ", fpr)
-print("roc_auc_score : ", roc_auc_score(y_test, y_probs_positive))
-plt.plot(fpr, tpr, color="orange", label="ROC")
-plt.plot([0, 1], [0, 1], color="darkblue", linestyle="--", label="Gussing")
-plt.xlabel("False positive rate (fpr)")
-plt.ylabel("True positive rate (tpr)")
-plt.title("Receiver Operating Characteristic (ROC) Curve")
-plt.legend()
-plt.show()
-"""
