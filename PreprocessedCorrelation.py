@@ -30,13 +30,16 @@ df7 = df7.rename(columns={'Date Visited': 'Date'})
 
 df8 = pd.merge(df6, df7, on=['ID', 'Date'], how='left')
 df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
-df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
-df8["Leak Found"] = df8["Leak Found"].fillna(-1)
+# df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
+# df8["Leak Found"] = df8["Leak Found"].fillna(-1)
 dataset = df8
+# print("All the rows included with N-PRV " )
+# print(dataset.loc[dataset['Leak Found'] == "N-PRV"])
 dataset["Leak Found"].replace(["Y", "N", "N-PRV"], [1, 0, -2], inplace=True)
 dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
 dataset1 = dataset
-# dataset = dataset1.drop(['Leak Alarm'], axis=1)
+dataset = dataset1.drop(['Leak Alarm'], axis=1)
+dataset = dataset1.drop(['Leak Found'], axis=1)
 
 dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
 print(dataset)
@@ -63,7 +66,7 @@ sns.heatmap(corr, annot=True, cmap="YlGnBu", ax=axs[0, 1])
 plt.show()
 """
 
-df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Alarm', 'Leak Found'])
+df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
 corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 plt.show()
