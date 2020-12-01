@@ -83,9 +83,9 @@ print("Model score is : ", clf.score(x_test, y_test))
 pred_probality = clf.predict_proba(x_test)
 print("Predict probability : ", pred_probality)
 # cross_validation score
-cross_validation_score = cross_val_score(clf, x_train, y_train, cv=5)
+cross_validation_score = cross_val_score(clf, x_train, y_train, cv=6)
 print("Cross validation score : ", cross_validation_score)
-cross_validation_predict = cross_val_predict(clf, x_train, y_train, cv=5)
+cross_validation_predict = cross_val_predict(clf, x_train, y_train, cv=6)
 print("Cross validation predict : ", cross_validation_score)
 cross_val_accuracy = np.mean(cross_validation_score) * 100
 print("cross validation accuracy : ", cross_val_accuracy)
