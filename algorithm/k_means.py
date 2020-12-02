@@ -93,8 +93,10 @@ print("x_test : \n ", x_test)
 
 kmeans = KMeans(n_clusters=2, init="k-means++", random_state=None,  max_iter=300, algorithm='auto', n_init=1000, verbose=1).fit(x_train)
 y_pred = kmeans.predict(x_test)
-# plt.scatter(x_centroid[:, 0], x_centroid[:, 1], c='red', s=50)
-# plt.show()
+centroids = kmeans.cluster_centers_
+print("Cluster centroids are : ", centroids)
+plt.scatter(x_centroid[:, 0], x_centroid[:, 1], c='red', s=50)
+plt.show()
 print("Prediction : \n ", y_pred)
 print(metrics.accuracy_score(y_test, y_pred))
 
