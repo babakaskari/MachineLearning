@@ -90,18 +90,8 @@ x_centroid = np.array(x_test.iloc[[16, 17], ])
 print(x_centroid)
 print("x_train : \n", x_train)
 print("x_test : \n ", x_test)
-wcss = []
-for i in range(1, 11):
-    kmeans = KMeans(n_clusters=i, init="k-means++", random_state=None,  max_iter=300, algorithm='auto', n_init=1000, verbose=1)
-    kmeans.fit(x_train)
-    wcss.append(kmeans.inertia_)
-plt.plot(range(1, 11), wcss)
-plt.title('Elbow Method')
-plt.xlabel('Number of clusters')
-plt.ylabel('WCSS')
-plt.show()
 
-# kmeans = KMeans(n_clusters=2, init="k-means++", random_state=None,  max_iter=300, algorithm='auto', n_init=1000, verbose=1).fit(x_train)
+kmeans = KMeans(n_clusters=2, init="k-means++", random_state=None,  max_iter=300, algorithm='auto', n_init=1000, verbose=1).fit(x_train)
 y_pred = kmeans.predict(x_test)
 centroids = kmeans.cluster_centers_
 print("Cluster centroids are : ", centroids)
