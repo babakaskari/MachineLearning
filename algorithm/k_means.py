@@ -53,31 +53,47 @@ dataset = df8
 indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
 # Delete these row indexes from dataFrame
 dataset.drop(indexNames, index=None, inplace=True)
-dataset.reset_index(inplace=True)
+dataset.reset_index(drop=True, inplace=True)
 dataset["Leak Found"].replace(["Y", "N"], [1, 0], inplace=True)
+
 # dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
-dataset1 = dataset
-dataset = dataset1.drop(['Leak Alarm'], axis=1)
+
+dataset = dataset.drop(['Leak Alarm'], axis=1)
 
 dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
+# print(dataset.to_string(max_rows=200))
 print("Number of null values in dataset :\n", dataset.isna().sum())
-# corrolation matrix
-print(dataset.columns.values)
-df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
+# # corrolation matrix
+# print(dataset.columns.values)
+# df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
+# corrMatrix = df.corr()
+# sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
+# plt.show()
+# print(dataset.loc[dataset['Leak Found'].isna()])
+# print("tempdata : \n ", dataset.shape[0])
+x_train = dataset.loc[dataset['Leak Found'].isna()]
+x_train = x_train.drop(["Leak Found"], axis=1)
+
+# x_train = x_train.sample(frac=1)
+# print("x_train shape : ", x_train.shape)
+x_test = dataset.loc[dataset['Leak Found'].notna()]
+y_test = x_test.loc[dataset['Leak Found'].notna(), ['Leak Found']]
+print(y_test)
+
+df = pd.DataFrame(x_test, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
 corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
-tempdata = dataset.drop(["Leak Found"], axis=1)
-print("tempdata : ", tempdata.shape[0])
-x_train = tempdata.loc[56:]
-x_train = x_train.sample(frac=1)
-# print("x_train shape : ", x_train.shape)
-x_test = tempdata.loc[35500:35520]
-print("x_train : ", x_train)
-print("x_test : ", x_test)
 
-kmeans = KMeans(n_clusters=2, init='k-means++',  max_iter=1000, random_state=0, algorithm='auto').fit(x_train)
+x_test = x_test.drop(["Leak Found"], axis=1)
+x_centroid = np.array(x_test.iloc[[16, 17], ])
+print(x_centroid)
+print("x_train : \n", x_train)
+print("x_test : \n ", x_test)
+
+
+kmeans = KMeans(n_clusters=2, init="k-means++", random_state=None,  max_iter=300, algorithm='auto', n_init=1000, verbose=1).fit(x_train)
 y_pred = kmeans.predict(x_test)
-print("Prediction : ", y_pred)
-
+print("Prediction : \n ", y_pred)
+print(metrics.accuracy_score(y_test, y_pred))
 
