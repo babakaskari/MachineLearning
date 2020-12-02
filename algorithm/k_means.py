@@ -97,8 +97,7 @@ centroids = kmeans.cluster_centers_
 print("Cluster centroids are : ", centroids)
 X = np.arange(1, len(x_train) + 1)
 # print("x_train shape", x_train.shape)
-
-plt.scatter(X, x_train["ID"], s=50)
+plt.scatter(x_train["ID"], x_train["value_Lvl"], s=50)
 plt.scatter(centroids[:, 0], centroids[:, 1], s=300, c='red')
 plt.show()
 print("Prediction : \n ", y_pred)
