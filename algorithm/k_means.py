@@ -71,6 +71,7 @@ print("Number of null values in dataset :\n", dataset.isna().sum())
 # plt.show()
 # print(dataset.loc[dataset['Leak Found'].isna()])
 # print("tempdata : \n ", dataset.shape[0])
+
 x_train = dataset.loc[dataset['Leak Found'].isna()]
 x_train = x_train.drop(["Leak Found"], axis=1)
 
@@ -78,6 +79,7 @@ x_train = x_train.drop(["Leak Found"], axis=1)
 # print("x_train shape : ", x_train.shape)
 x_test = dataset.loc[dataset['Leak Found'].notna()]
 y_test = x_test.loc[dataset['Leak Found'].notna(), ['Leak Found']]
+
 # print(y_test)
 
 df = pd.DataFrame(x_test, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
@@ -92,7 +94,12 @@ x_centroid = np.array(x_test.iloc[[16, 17], ])
 # print("x_train : \n", x_train)
 # print("x_test : \n ", x_test)
 
-kmeans = KMeans(n_clusters=2, init="k-means++", random_state=None,  max_iter=300, algorithm='auto', n_init=1000).fit(x_train)
+kmeans = KMeans(n_clusters=2,
+                init="k-means++",
+                random_state=None,
+                max_iter=300,
+                algorithm='auto',
+                n_init=1000).fit(x_train)
 y_pred = kmeans.predict(x_test)
 centroids = kmeans.cluster_centers_
 print("Cluster centroids are : ", centroids)
@@ -106,9 +113,10 @@ print("Prediction : \n ", y_pred)
 print(metrics.accuracy_score(y_test, y_pred))
 y_kmeans = kmeans.fit_predict(x_test)
 print("k_means predict is equal to : ", y_kmeans)
-plt.scatter(x_test[y_kmeans == 0, 0], x_test[y_kmeans == 0, 1], s=100, c='red', label='Cluster 1')
-# plt.scatter(x_test[y_kmeans == 1, 0], x_test[y_kmeans == 1, 1], s = 100, c = 'blue', label = 'Cluster 2')
-# plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], s = 300, c = 'yellow', label = 'Centroids')
+x_test = x_test.to_numpy()
+plt.scatter(x_test[y_kmeans == 0, 0], x_test[y_kmeans == 0, 1], s=100, c='green', label='Cluster 1')
+plt.scatter(x_test[y_kmeans == 1, 0], x_test[y_kmeans == 1, 1], s=100, c='blue', label='Cluster 2')
+plt.scatter(centroids[:, 0], centroids[:, 1], s=300, c='red')
 plt.title('Clusters of customers')
 plt.xlabel('Annual Income (k$)')
 plt.ylabel('Spending Score (1-100)')
