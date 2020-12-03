@@ -93,6 +93,11 @@ x_centroid = np.array(x_test.iloc[[16, 17], ])
 # print(x_centroid)
 # print("x_train : \n", x_train)
 # print("x_test : \n ", x_test)
+print("dataset features : ", dataset.columns)
+dummy_data = dataset.drop(['Leak Found'], axis=1)
+dummy_data = dummy_data.sample(frac=1)
+x_dummy = dummy_data[0:3000]
+x_train = dummy_data
 
 kmeans = KMeans(n_clusters=2,
                 init="k-means++",
@@ -111,9 +116,9 @@ print("x_test features  : ", x_test.columns)
 # plt.show()
 print("Prediction : \n ", y_pred)
 print(metrics.accuracy_score(y_test, y_pred))
-y_kmeans = kmeans.fit_predict(x_test)
+y_kmeans = kmeans.fit_predict(x_train)
 print("k_means predict is equal to : ", y_kmeans)
-d_numpy = x_test.to_numpy()
+d_numpy = x_train.to_numpy()
 plt.scatter(d_numpy[y_kmeans == 0, 0], d_numpy[y_kmeans == 0, 1], s=100, c='green', label='Cluster 1')
 plt.scatter(d_numpy[y_kmeans == 1, 0], d_numpy[y_kmeans == 1, 1], s=100, c='blue', label='Cluster 2')
 plt.scatter(centroids[:, 0], centroids[:, 1], s=300, c='red')
