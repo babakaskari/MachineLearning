@@ -80,38 +80,37 @@ x_train = x_train.drop(["Leak Found"], axis=1)
 # print("x_train shape : ", x_train.shape)
 x_test = dataset.loc[dataset['Leak Found'].notna()]
 y_test = x_test.loc[dataset['Leak Found'].notna(), ['Leak Found']]
-print(y_test)
+print("y_test is equal to : ", y_test)
 x_test = x_test.drop(["Leak Found"], axis=1)
 x_centroid = np.array(x_test.loc[16:17])
 print(x_centroid.shape)
 print("x_train : \n", x_train)
 print("x_test : \n ", x_test)
 
-
-def acc(y_test, y_pred):
-
-    acc = metrics.accuracy_score(y_test, y_pred)
-    return acc
-
-
-score = make_scorer(acc, greater_is_better=False)
+# score = make_scorer(acc, greater_is_better=False)
 
 attributes = {
-
-    'init': ['k-means++', 'random', 'ndarray', 'callable'],
+    'n_clusters': [2],
+    'init': ['k-means++', 'random'],
     'random_state': [None, 0],
     'max_iter': [300, 600, 1200],
+    # 'max_iter': np.arange(100, 2000, 100),
     'algorithm': ['full', 'auto']
 
 }
 kmeansModel = KMeans()
 
-gsearch = GridSearchCV(estimator=kmeansModel, param_grid=attributes, n_jobs=-1, verbose=2,
-                       scoring=score)
+gs_k_means = GridSearchCV(estimator=kmeansModel,
+                          param_grid=attributes,
+                          cv=5,
+                          n_jobs=-1,
+                          verbose=2,)
 
-gsearch.fit(x_test, y_test)
-y_pred = gsearch.predict(x_test)
-acc(y_test, y_pred)
-print("Prediction : \n ", y_pred)
+gs_k_means.fit(x_train)
+print("gs_k_means best parameter is : ", gs_k_means.best_params_)
+print("gs_k_means score : ", gs_k_means.score(x_test))
+y_pred = gs_k_means.predict(x_test)
+print("Prediction : ", y_pred)
+
 
 
