@@ -156,4 +156,19 @@ plt.scatter(centroids[:, 0], centroids[:, 1], s=200, c='yellow', label='Two assu
 plt.title('Clusters')
 plt.legend()
 plt.show()
+# Run the Kmeans algorithm and get the index of data points clusters
+elbo = []
+list_k = list(range(2, 5))
+
+for k in list_k:
+    km = KMeans(n_clusters=k)
+    km.fit(x_train)
+    elbo.append(km.inertia_)
+
+# Plot sse against k
+plt.figure(figsize=(6, 6))
+plt.plot(list_k, elbo, '-o')
+plt.xlabel(r'Number of clusters')
+plt.ylabel('Sum of squared distance')
+plt.show()
 
