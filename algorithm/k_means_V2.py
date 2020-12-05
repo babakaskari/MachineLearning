@@ -54,7 +54,12 @@ dataset["Leak Found"].replace(["Y", "N"], [1, 0], inplace=True)
 # dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
 dataset = dataset.drop(['Leak Alarm'], axis=1)
 
-dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
+# ############################################################ Convert Date categorical to numerical
+# dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
+date_encoder = preprocessing.LabelEncoder()
+date_encoder.fit(dataset['Date'])
+# print(list(date_encoder.classes_))
+dataset['Date'] = date_encoder.transform(dataset['Date'])
 # print(dataset.to_string(max_rows=200))
 print("Number of null values in dataset :\n", dataset.isna().sum())
 ###################################################### CORRELATION MATRIX
@@ -158,7 +163,7 @@ plt.legend()
 plt.show()
 # Run the Kmeans algorithm and get the index of data points clusters
 elbo = []
-list_k = list(range(2, 5))
+list_k = list(range(2, 11))
 
 for k in list_k:
     km = KMeans(n_clusters=k)
