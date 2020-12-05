@@ -18,6 +18,9 @@ import seaborn as sns
 from sklearn import metrics
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import Normalizer
+from gaussrank import *
+from sklearn.preprocessing import StandardScaler
+
 sns.set()
 
 pd.set_option('mode.chained_assignment', None)
@@ -71,7 +74,7 @@ y_test = x_test.loc[dataset['Leak Found'].notna(), ['Leak Found']]
 df = pd.DataFrame(x_test, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
 corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
-plt.show()
+# plt.show()
 ######################################################
 x_test = x_test.drop(["Leak Found"], axis=1)
 print("x_test shape is equal to :  ", x_test.shape)
@@ -100,7 +103,7 @@ print("Description  : \n ", dummy_data.describe())
 # x_train = scaler.transform(x_train)
 # plt.show()
 ########################################### APPLYING GUASSRANK NORMALIZATION
-from gaussrank import *
+"""
 x_cols = x_train.columns[:]
 x = x_train[x_cols]
 
@@ -108,10 +111,16 @@ s = GaussRankScaler()
 x_ = s.fit_transform( x )
 assert x_.shape == x.shape
 x_train[x_cols] = x_
+"""
+############################################### standard scaler
+scaler = StandardScaler()
+data_scaled = scaler.fit_transform(x_train)
+x_train = pd.DataFrame(data_scaled)
+print("x_train description : ", x_train.describe())
 ########################################## TO REPRESENT OUR DATASET, ALL COLUMNS IN MATRIX FORM
 x_train = pd.DataFrame(x_train)
 pd.plotting.scatter_matrix(x_train)
-x_train.plot(kind='density',subplots=True,sharex=False)
+x_train.plot(kind='density', subplots=True, sharex=False)
 plt.show()
 ############################################ APPLYING KMEANS
 kmeans = KMeans(n_clusters=2,
