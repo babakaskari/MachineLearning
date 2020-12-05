@@ -93,7 +93,7 @@ s = GaussRankScaler()
 x_ = s.fit_transform( x )
 assert x_.shape == x.shape
 dataset2[x_cols] = x_
-print("GaussRankScaler dataset description : ", dataset2.describe())
+print("GaussRankScaler dataset description :\n ", dataset2.describe())
 ############################################### standard scaler
 """
 scaler = StandardScaler()
@@ -117,7 +117,18 @@ print('Number of data points in train data:', x_train.shape[0])
 print('Number of data points in test data:', x_test.shape[0])
 # print('Number of data points in test data:', x_cv.shape[0])
 
-label_prop_model = LabelPropagation(kernel="knn", gamma=20, n_neighbors=7, max_iter=5000)
+def rbf_kernel_safe(X, Y=None, gamma=None):
+    X, Y = sklearn.metrics.pairwise.check_pairwise_arrays(X, Y)
+    if gamma is None:
+        gamma = 1.0 / X.shape[1]
+
+    K = sklearn.metrics.pairwise.euclidean_distances(X, Y, squared=True)
+    K *= -gamma
+    K -= K.max()
+    np.exp(K, K)  # exponentiate K in-place
+    return K
+
+label_prop_model = LabelPropagation(kernel=rbf_kernel_safe, n_neighbors=7, max_iter=10)
 label_prop_model.fit(x_train, y_train)
 
 print("Result:", metrics.accuracy_score(y_test, label_prop_model.predict(x_test)))
