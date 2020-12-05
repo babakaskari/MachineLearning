@@ -10,7 +10,7 @@ import sklearn
 import seaborn as sns
 pd.set_option('mode.chained_assignment', None)
 
-df = pd.read_csv("Acoustic Logger Data.csv")
+df = pd.read_csv("../dataset/Acoustic Logger Data.csv")
 ###################################################### COLUMN SELECTION LVL & SPR
 df_take_Lvl = df.loc[df["LvlSpr"] == "Lvl"]
 df_take_Spr = df.loc[df["LvlSpr"] == "Spr"]
@@ -22,7 +22,7 @@ df_drop_LvlSpr = df_merge_LvlSpr.drop(['LvlSpr_Lvl', 'LvlSpr_Spr'], axis=1).drop
 df_drop_LvlSpr['Date'] = pd.to_datetime(df_drop_LvlSpr['Date'], format='%d-%b')
 df_drop_LvlSpr['Date'] = df_drop_LvlSpr['Date'].dt.strftime('%d-%m')
 
-df7 = pd.read_csv("Leak Alarm Results.csv")
+df7 = pd.read_csv("../dataset/Leak Alarm Results.csv")
 df7['Date Visited'] = pd.to_datetime(df7['Date Visited'], format='%d/%m/%Y')
 df7['Date Visited'] = df7['Date Visited'].dt.strftime('%d-%m')
 df_change_column_name = df7.rename(columns={'Date Visited': 'Date'})
