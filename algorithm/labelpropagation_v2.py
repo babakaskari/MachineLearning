@@ -23,6 +23,8 @@ from sklearn.model_selection import cross_val_predict
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import roc_curve
 from sklearn.semi_supervised import LabelPropagation
+from sklearn.semi_supervised import LabelSpreading
+
 from gaussrank import *
 from sklearn.preprocessing import StandardScaler
 import seaborn as sns
@@ -68,9 +70,9 @@ date_encoder.fit(dataset['Date'])
 # print(list(date_encoder.classes_))
 dataset['Date'] = date_encoder.transform(dataset['Date'])
 # print(dataset.to_string(max_rows=200))
+dataset = dataset.drop_duplicates()
 print(" dataset description : ", dataset.describe())
 # ##############################################
-print("Number of null values in dataset :\n", dataset.isna().sum())
 
 # corrolation matrix
 print(dataset.columns.values)
@@ -81,7 +83,7 @@ sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 tempdata = dataset
 dataset = dataset.sample(frac=1)
 # dataset = dataset.loc[:10000]
-print("Number of null values in dataset : ", dataset.isna().sum())
+print("Number of null values in dataset : \n", dataset.isna().sum())
 # print("dataset : ", dataset.shape[0])
 dataset2 = dataset.drop(["Leak Found"], axis=1)
 
@@ -94,7 +96,7 @@ s = GaussRankScaler()
 x_ = s.fit_transform( x )
 assert x_.shape == x.shape
 dataset2[x_cols] = x_
-print("GaussRankScaler dataset description : ", dataset2.describe())
+print("GaussRankScaler dataset description :\n ", dataset2.describe())
 ############################################### standard scaler
 """
 scaler = StandardScaler()
@@ -117,12 +119,27 @@ x_train, x_test, y_train, y_test = train_test_split(dataset2,
 print('Number of data points in train data:', x_train.shape[0])
 print('Number of data points in test data:', x_test.shape[0])
 # print('Number of data points in test data:', x_cv.shape[0])
+"""
+def rbf_kernel_safe(X, Y=None, gamma=None):
+    X, Y = sklearn.metrics.pairwise.check_pairwise_arrays(X, Y)
+    if gamma is None:
+        gamma = 1.0 / X.shape[1]
 
-label_prop_model = LabelPropagation(kernel="knn", n_neighbors=7, max_iter=100)
+    K = sklearn.metrics.pairwise.euclidean_distances(X, Y, squared=True)
+    K *= -gamma
+    K -= K.max()
+    np.exp(K, K)  # exponentiate K in-place
+    return K
+"""
+
+label_spread_model = LabelSpreading(kernel="knn", n_neighbors=7, max_iter=10)
+label_spread_model.fit(x_train, y_train)
+pred = label_spread_model.predict(x_test)
+print("prediction : ", pred)
+print("Result:", metrics.accuracy_score(y_test, pred))
+
+label_prop_model = LabelPropagation(kernel="knn", n_neighbors=7, max_iter=10)
 label_prop_model.fit(x_train, y_train)
-
-print("Result:", metrics.accuracy_score(y_test, label_prop_model.predict(x_test)))
-print("Model score is : ", label_prop_model.score(x_test, y_test))
-
-
-
+pred = label_prop_model.predict(x_test)
+print("prediction : ", pred)
+print("Result:", metrics.accuracy_score(y_test, pred))
