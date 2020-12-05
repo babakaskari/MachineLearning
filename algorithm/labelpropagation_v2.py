@@ -84,6 +84,7 @@ dataset = dataset.sample(frac=1)
 print("Number of null values in dataset : ", dataset.isna().sum())
 # print("dataset : ", dataset.shape[0])
 dataset2 = dataset.drop(["Leak Found"], axis=1)
+
 ########################################### APPLYING GUASSRANK NORMALIZATION
 
 x_cols = dataset2.columns[:]
@@ -117,7 +118,7 @@ print('Number of data points in train data:', x_train.shape[0])
 print('Number of data points in test data:', x_test.shape[0])
 # print('Number of data points in test data:', x_cv.shape[0])
 
-label_prop_model = LabelPropagation(kernel="knn", gamma=20, n_neighbors=7, max_iter=5000)
+label_prop_model = LabelPropagation(kernel="knn", n_neighbors=7, max_iter=100)
 label_prop_model.fit(x_train, y_train)
 
 print("Result:", metrics.accuracy_score(y_test, label_prop_model.predict(x_test)))
