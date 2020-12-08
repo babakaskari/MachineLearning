@@ -81,13 +81,16 @@ corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
 tempdata = dataset
-dataset = dataset.loc[:50]
+# dataset = dataset.loc[:1000]
 dataset = dataset.sample(frac=1)
-# dataset = dataset.loc[:10000]
+print("dataset shape: ", dataset.shape)
 print("Number of null values in dataset : \n", dataset.isna().sum())
 # print("dataset : ", dataset.shape[0])
-dataset2 = dataset.drop(["Leak Found"], axis=1)
-
+# dataset2 = dataset.drop(["Leak Found"], axis=1)
+dataset2 = dataset
+print("dataset features : ", dataset.columns)
+leak_found = dataset2["Leak Found"]
+dataset2 = dataset.drop(['Leak Found'], axis=1)
 ########################################### APPLYING GUASSRANK NORMALIZATION
 
 x_cols = dataset2.columns[:]
@@ -106,14 +109,11 @@ x_train = pd.DataFrame(data_scaled)
 print("x_train description : ", x_train.describe())
 """
 # ##############################################
+print("dataset2 features : ", dataset2.columns)
 
-leak_found = dataset["Leak Found"]
 
-# print("x_train : ", x_train)
-# print("y_train : ", y_train)
 x_train, x_test, y_train, y_test = train_test_split(dataset2,
                                                     leak_found,
-                                                    stratify=leak_found,
                                                     test_size=0.2,
                                                     random_state=42)
 
