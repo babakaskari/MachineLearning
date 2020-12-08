@@ -127,9 +127,23 @@ pred = label_spread_model.predict(x_test)
 print("prediction : ", pred)
 print("Result:", metrics.accuracy_score(y_test, pred))
 
-label_prop_model = LabelPropagation(kernel="knn", n_neighbors=7, max_iter=10)
+label_prop_model = LabelPropagation(kernel="knn", n_neighbors=3, max_iter=10)
 label_prop_model.fit(x_train, y_train)
 pred = label_prop_model.predict(x_test)
 print("prediction : ", pred)
 print("Result:", metrics.accuracy_score(y_test, pred))
 
+elbo = []
+list_k = list(range(1, 11))
+for k in list_k:
+    lp = LabelPropagation(kernel="knn", n_neighbors=k, max_iter=10)
+    lp.fit(x_train, y_train)
+    pred = label_prop_model.predict(x_test)
+    elbo.append(metrics.accuracy_score(y_test, pred))
+
+# Plot sse against k
+plt.figure(figsize=(6, 6))
+plt.plot(list_k, elbo, '-o')
+plt.xlabel(r'Number of neighbours')
+plt.ylabel('Sum of squared distance')
+plt.show()
