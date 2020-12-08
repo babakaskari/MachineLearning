@@ -43,13 +43,13 @@ df7 = df7.rename(columns={'Date Visited': 'Date'})
 df8 = pd.merge(df6, df7, on=['ID', 'Date'], how='left')
 df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
 # df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
-#df8["Leak Found"] = df8["Leak Found"].fillna(-1)
+# df8["Leak Found"] = df8["Leak Found"].fillna(-1)
 dataset = df8
-###################################################### Delete these row indexes from dataFrame
+# ##################################################### Delete these row indexes from dataFrame
 indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
 dataset.drop(indexNames, index=None, inplace=True)
 dataset.reset_index(drop=True, inplace=True)
-###################################################### DROPPING LEAK ALARM & LEAK FOUND
+# ##################################################### DROPPING LEAK ALARM & LEAK FOUND
 dataset["Leak Found"].replace(["Y", "N"], [1, 0], inplace=True)
 # dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
 dataset = dataset.drop(['Leak Alarm'], axis=1)
@@ -62,37 +62,37 @@ date_encoder.fit(dataset['Date'])
 dataset['Date'] = date_encoder.transform(dataset['Date'])
 # print(dataset.to_string(max_rows=200))
 print("Number of null values in dataset :\n", dataset.isna().sum())
-###################################################### CORRELATION MATRIX
+# ##################################################### CORRELATION MATRIX
 # print(dataset.columns.values)
 # dataset2 = dataset.drop(["Leak Found"], axis=1)
 # df = pd.DataFrame(dataset2, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
 # corrMatrix = df.corr()
 # sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
-###################################################### SPLIT THE DATASET
+# ##################################################### SPLIT THE DATASET
 x_train = dataset.loc[dataset['Leak Found'].isna()]
 x_train = x_train.drop(["Leak Found"], axis=1)
 # x_train = x_train.sample(frac=1)
 x_test = dataset.loc[dataset['Leak Found'].notna()]
 y_test = x_test.loc[dataset['Leak Found'].notna(), ['Leak Found']]
-###################################################### CORRELATION OF KNOWN LABELLED DATA
+# ##################################################### CORRELATION OF KNOWN LABELLED DATA
 df = pd.DataFrame(x_test, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
 corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
-######################################################
+# #####################################################
 x_test = x_test.drop(["Leak Found"], axis=1)
 print("x_test shape is equal to :  ", x_test.shape)
 print("dataset features :  ", dataset.columns)
-############################################## CREATING DUMMY_DATA
+# ############################################# CREATING DUMMY_DATA
 # x_centroid = np.array(x_test.iloc[[16, 17], ])
 dummy_data = dataset.drop(['Leak Found'], axis=1)
 print("Description  : \n ", dummy_data.describe())
-############################################## TO TAKE THE SELECTED SAMPLE FOR OUR XTRAIN
+# ############################################# TO TAKE THE SELECTED SAMPLE FOR OUR XTRAIN
 # dummy_data = dummy_data.sample(frac=1)
-#x_dummy = dummy_data[:54]
-#x_train = x_dummy
-############################################# SCALER NORMALIZATION   " TO BE MODIFIED LATER"
+# x_dummy = dummy_data[:54]
+# x_train = x_dummy
+# ############################################ SCALER NORMALIZATION   " TO BE MODIFIED LATER"
 
 # scaler = MinMaxScaler()
 # # fit using the train set
