@@ -126,13 +126,6 @@ label_spread_model.fit(x_train, y_train)
 pred = label_spread_model.predict(x_test)
 print("prediction : ", pred)
 print("Result:", metrics.accuracy_score(y_test, pred))
-"""
-"""
-label_prop_model = LabelPropagation(kernel="knn", n_neighbors=3, max_iter=10)
-label_prop_model.fit(x_train, y_train)
-pred = label_prop_model.predict(x_test)
-print("prediction : ", pred)
-print("Result:", metrics.accuracy_score(y_test, pred))
 
 elbo = []
 list_k = list(range(1, 11))
