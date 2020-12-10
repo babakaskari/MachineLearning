@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import cross_val_score
 from sklearn.utils import shuffle
 from sklearn.base import BaseEstimator, RegressorMixin
 from xgboost import XGBRegressor

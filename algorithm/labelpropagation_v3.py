@@ -81,7 +81,7 @@ corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
 tempdata = dataset
-# dataset = dataset.loc[:1000]
+dataset = dataset.loc[:80]
 dataset = dataset.sample(frac=1)
 print("dataset shape: ", dataset.shape)
 print("Number of null values in dataset : \n", dataset.isna().sum())
@@ -122,11 +122,11 @@ print('Number of data points in train data:', x_train.shape[0])
 print('Number of data points in test data:', x_test.shape[0])
 # print('Number of data points in test data:', x_cv.shape[0])
 
-label_spread_model = LabelSpreading(kernel="knn", n_neighbors=7, max_iter=10)
-label_spread_model.fit(x_train, y_train)
-pred = label_spread_model.predict(x_test)
+label_prpagation_model = LabelPropagation(kernel="knn", n_neighbors=7, max_iter=10)
+label_prpagation_model.fit(x_train, y_train)
+pred = label_prpagation_model.predict(x_test)
 print("prediction : ", pred)
-print("Result:", metrics.accuracy_score(y_test, pred))
+print("Result of LabelPropagation:", metrics.accuracy_score(y_test, pred))
 
 elbo = []
 list_k = list(range(2, 11))

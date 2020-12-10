@@ -105,7 +105,8 @@ x_labeled_data = x_labeled_data.drop(["Leak Found"], axis=1)
 scaler = StandardScaler()
 data_scaled = scaler.fit_transform(x_labeled_data)
 x_train = pd.DataFrame(data_scaled)
-print("x_train description : ", x_labeled_data.describe())
+print("x_train after normalization : ", x_train.head())
+print("x_train description after normalization: ", x_labeled_data.describe())
 
 # ############################################################
 # x_train = x_train.sample(frac=1)
@@ -188,17 +189,11 @@ gs_rfc = GridSearchCV(estimator=rfc,
 
 gs_rfc.fit(x_train, y_train)
 print("RandomForestClassifier best parameter is : ", gs_rfc.best_params_)
-print("RandomForestClassifier best parameter is : ", gs_rfc.best_params_['class_weight'])
+# print("RandomForestClassifier best parameter is : ", gs_rfc.best_params_['class_weight'])
 # print("RandomForestClassifier score : ", gs_rfc.score(x_test))
 gs_rfc_pred = gs_rfc.predict(x_test)
 print("RandomForestClassifier Prediction : ", gs_rfc_pred)
 # gs_rfc_matrices = evaluate_preds(y_test, gs_rfc_pred)
 gs_rfc_matrices = evaluate_preds(gs_rfc, x_cv, y_cv, gs_rfc_pred)
-"""
-compare_matrices = pd.DataFrame({"baseline": baseline_metrices,
-                                 "rfc_new": rfc_new_matrices,
-                                "grid search": gs_rfc_matrices,
-                                 })
-"""
 
 

@@ -49,7 +49,7 @@ df7 = df7.rename(columns={'Date Visited': 'Date'})
 df8 = pd.merge(df6, df7, on=['ID', 'Date'], how='left')
 df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
 # df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
-#df8["Leak Found"] = df8["Leak Found"].fillna(-1)
+# df8["Leak Found"] = df8["Leak Found"].fillna(-1)
 dataset = df8
 ###################################################### Delete these row indexes from dataFrame
 indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
@@ -175,7 +175,7 @@ for model in model_factory:
 
 # ////////////////////////////////
 gs_rfc_grid = {
-    'n_estimators': [100, 200, 500],
+    'n_estimators': [10, 50, 100, 200, 500],
     # 'max_depth': ['None', 20, 30],
     'max_features': ['auto', 'sqrt', 'log2'],
     'min_samples_split': [6],

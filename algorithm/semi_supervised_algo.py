@@ -9,7 +9,7 @@ from sklearn.linear_model import BayesianRidge, Ridge, ElasticNet
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn import preprocessing
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
@@ -74,13 +74,19 @@ print("Number of null values in dataset :\n", dataset.isna().sum())
 # plt.show()
 # ##################################################### SPLIT THE DATASET
 
-x_train = dataset.loc[dataset['Leak Found'].notna()]
-y_train = x_train.drop(["Leak Found"], axis=1)
+x_labeled_data = dataset.loc[dataset['Leak Found'].notna()]
+y_labeled_date = x_labeled_data["Leak Found"]
+x_labeled_data = x_labeled_data.drop(["Leak Found"], axis=1)
 # x_train = x_train.sample(frac=1)
-x_test = dataset.loc[dataset['Leak Found'].notna()]
-y_test = x_test.drop(["Leak Found"], axis=1)
+x_unlabeled_data = dataset.loc[dataset['Leak Found'].isna()]
+y_unlabeled_data = x_unlabeled_data.drop(["Leak Found"], axis=1)
+x_train, x_test, y_train, y_test = train_test_split(x_labeled_data,
+                                                    y_labeled_date,
+                                                    test_size=0.2,
+                                                    random_state=42)
+# x_train = x_train.sample(frac=1)
 print()
-feature = x_train.columns
+feature = x_labeled_data.columns
 targets = 'Leak Alarm'
 ########################
 
@@ -136,7 +142,7 @@ class PseudoLabeler(BaseEstimator, RegressorMixin):
 
     """
 
-    def __init__(self, models, unlabled_data, features, target, sample_rate=0.2, seed=42):
+    def __init__(self, model, unlabled_data, features, target, sample_rate=0.2, seed=42):
 
         """
         @sample_rate - percent of samples used as pseudo-labelled data
@@ -146,7 +152,7 @@ class PseudoLabeler(BaseEstimator, RegressorMixin):
 
         self.sample_rate = sample_rate
         self.seed = seed
-        self.model = models
+        self.model = model
         self.model.seed = seed
 
         self.unlabled_data = unlabled_data
@@ -200,7 +206,7 @@ class PseudoLabeler(BaseEstimator, RegressorMixin):
         # the training set
         sampled_pseudo_data = pseudo_data.sample(n=num_of_samples)
         temp_train = pd.concat([X, y], axis=1)
-        augemented_train = pd.concat([sampled_pseudo_data, temp_train])
+        augemented_train = pd.concat([sampled_pseudo_data, temp_train], sort=False)
 
         return shuffle(augemented_train)
 
@@ -219,7 +225,7 @@ model_factory = [
     KNeighborsClassifier(),
     PseudoLabeler(
         # XGBRegressor(nthread=1),
-        KNeighborsClassifier(),
+        KNeighborsClassifier(n_neighbors=5),
         x_test,
         feature,
         targets,
