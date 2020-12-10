@@ -75,6 +75,25 @@ labels = shuffled_labeled_df[["Leak Found"]]
 
 X_labeled = shuffled_labeled_df.drop(labels=['Leak Found'], axis=1)   ###################  Labled train
 X_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)        ###################  Unlabled
+############################################################ APPLYING GUASSRANK NORMALIZATION
+x_cols = X_labeled.columns[:]
+x = X_labeled[x_cols]
+
+s = GaussRankScaler()
+x_ = s.fit_transform( x )
+assert x_.shape == x.shape
+X_labeled[x_cols] = x_
+
+x_cols = X_unlabeled.columns[:]
+x = X_unlabeled[x_cols]
+
+s = GaussRankScaler()
+x_ = s.fit_transform( x )
+assert x_.shape == x.shape
+X_unlabeled[x_cols] = x_
+
+
+
 # ############################################################ SPLIT
 test_ind = round(len(X_labeled)*0.75)
 train_ind = test_ind + round(len(X_labeled)*0.25)

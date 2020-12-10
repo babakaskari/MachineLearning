@@ -212,3 +212,13 @@ compare_matrices.plot.bar(rot=0)
 
 plt.show()
 
+# ################################################ AdaBoostClassifier starts
+clf = AdaBoostClassifier(n_estimators=100, random_state=0)
+clf.fit(x_train, y_train)
+clf_pred = clf.predict(x_test)
+print("AdaBoostClassifier Prediction : ", clf_pred)
+# gs_rfc_matrices = evaluate_preds(y_test, gs_rfc_pred)
+clf_matrices = evaluate_preds(clf, x_test, y_test, clf_pred)
+
+# ################################################ AdaBoostClassifier ends
+
