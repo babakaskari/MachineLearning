@@ -6,6 +6,7 @@ import sklearn
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
+from gaussrank import *
 from sklearn.metrics import plot_confusion_matrix
 pd.set_option('mode.chained_assignment', None)
 

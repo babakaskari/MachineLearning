@@ -81,7 +81,7 @@ corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
 tempdata = dataset
-dataset = dataset.loc[:80]
+dataset = dataset.loc[:1000]
 dataset = dataset.sample(frac=1)
 print("dataset shape: ", dataset.shape)
 print("Number of null values in dataset : \n", dataset.isna().sum())
@@ -129,17 +129,26 @@ print("prediction : ", pred)
 print("Result of LabelPropagation:", metrics.accuracy_score(y_test, pred))
 
 error = []
-list_k = list(range(2, 11))
-for k in list_k:
-    lp = LabelPropagation(kernel="knn", n_neighbors=k, max_iter=10)
+# list_k = list(range(2, 11))
+# for k in list_k:
+    # lp = LabelPropagation(kernel="knn", n_neighbors=k, max_iter=100)
+    # lp.fit(x_train, y_train)
+    # pred = lp.predict(x_test)
+    # error.append(np.mean(pred != y_test))
+
+for k in np.arange(1.0, 15.0, 0.5):
+    lp = LabelPropagation(kernel="rbf", gamma=k, max_iter=1000)
     lp.fit(x_train, y_train)
     pred = lp.predict(x_test)
     error.append(np.mean(pred != y_test))
 
+
+
 # Plot sse against k
 
 plt.figure(figsize=(10, 6))
-plt.plot(range(2, 11), error, color="blue", linestyle="dashed", marker="o", markerfacecolor="red", markersize=10)
+# plt.plot(range(0, 20), error, color="blue", linestyle="dashed", marker="o", markerfacecolor="red", markersize=10)
+plt.plot(np.arange(1.0, 15.0, 0.5), error, color="blue", linestyle="dashed", marker="o", markerfacecolor="red", markersize=10)
 plt.title("Error Rate vs. K Value")
 plt.xlabel("K")
 plt.ylabel("Error Rate")

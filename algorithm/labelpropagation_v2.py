@@ -71,7 +71,7 @@ date_encoder.fit(dataset['Date'])
 dataset['Date'] = date_encoder.transform(dataset['Date'])
 # print(dataset.to_string(max_rows=200))
 dataset = dataset.drop_duplicates()
-print(" dataset description : ", dataset.describe())
+print(" dataset description : \n ", dataset.describe())
 # ##############################################
 
 # corrolation matrix
@@ -81,7 +81,7 @@ corrMatrix = df.corr()
 sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 # plt.show()
 tempdata = dataset
-dataset = dataset.loc[:50]
+dataset = dataset.loc[:90]
 dataset = dataset.sample(frac=1)
 # dataset = dataset.loc[:10000]
 print("Number of null values in dataset : \n", dataset.isna().sum())
