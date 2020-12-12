@@ -129,8 +129,6 @@ while len(X_unlabeled) > 0:
     preds = clf.predict(X_unlabeled)
     prob_0 = pred_probs[:, 0]
     prob_1 = pred_probs[:, 1]
-
-
     # Store predictions and probabilities in dataframe
     df_pred_prob = pd.DataFrame([])
     df_pred_prob['Leak Found'] = preds
@@ -160,7 +158,6 @@ while len(X_unlabeled) > 0:
     # print("y_train : ", y_train)
     # unshuffeled_df = pd.concat([X_train, y_train["Leak Found"]], axis=1)
     unshuffeled_df = pd.concat([X_train, y_train], axis=1)
-
     shuffeled_df = unshuffeled_df.sample(frac=1)    
     y_train['Leak Found'] = shuffeled_df['Leak Found']    
     # print("y_train shuffeled_df: ", y_train)

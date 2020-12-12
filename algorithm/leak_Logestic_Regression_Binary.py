@@ -43,7 +43,26 @@ labels = shuffled_labeled_df[["Leak Found"]]
 # df8.to_csv('OHE.csv')
 X_labeled = shuffled_labeled_df.drop(labels=['Leak Found'], axis=1) #Labled train
 X_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)      #Unlabled
+# =======================labeled data
+x_cols = X_labeled.columns[:]
+x = X_labeled[x_cols]
 
+s = GaussRankScaler()
+x_ = s.fit_transform( x )
+assert x_.shape == x.shape
+X_labeled[x_cols] = x_
+
+# ===================== unlabeled data
+
+x_cols = X_unlabeled.columns[:]
+x = X_unlabeled[x_cols]
+
+s = GaussRankScaler()
+x_ = s.fit_transform( x )
+assert x_.shape == x.shape
+X_unlabeled[x_cols] = x_
+
+# #################################################
 test_ind = round(len(X_labeled)*0.70)
 train_ind = test_ind + round(len(X_labeled)*0.30)
 X_test = X_labeled.iloc[:test_ind]
