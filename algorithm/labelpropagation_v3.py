@@ -128,6 +128,12 @@ pred = label_prpagation_model.predict(x_test)
 print("prediction : ", pred)
 print("Result of LabelPropagation:", metrics.accuracy_score(y_test, pred))
 
+label_spreading_model = LabelSpreading(kernel="rbf", gamma=20, max_iter=10)
+label_spreading_model.fit(x_train, y_train)
+pred = label_spreading_model.predict(x_test)
+print("prediction : ", pred)
+print("Result of LabelSpreading:", metrics.accuracy_score(y_test, pred))
+
 error_prop_knn = []
 error_spr_knn = []
 error_prop_rbf = []
