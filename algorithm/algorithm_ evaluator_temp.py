@@ -99,7 +99,7 @@ def evaluate_preds(model, x_true, y_true, y_preds):
 
 
 x_labeled_data = dataset.loc[dataset['Leak Found'].notna()]
-y_labeled_date = x_labeled_data["Leak Found"]
+y_labeled_data = x_labeled_data["Leak Found"]
 x_labeled_data = x_labeled_data.drop(["Leak Found"], axis=1)
 # ############################################## standard scaler
 scaler = StandardScaler()
@@ -113,7 +113,7 @@ print("x_train description after normalization: ", x_labeled_data.describe())
 x_unlabeled_data = dataset.loc[dataset['Leak Found'].isna()]
 y_unlabeled_data = x_unlabeled_data.drop(["Leak Found"], axis=1)
 x_train, x_test, y_train, y_test = train_test_split(x_labeled_data,
-                                                    y_labeled_date,
+                                                    y_labeled_data,
                                                     test_size=0.2,
                                                     random_state=42)
 x_train, x_cv, y_train, y_cv = train_test_split(x_train,
@@ -213,12 +213,12 @@ compare_matrices.plot.bar(rot=0)
 plt.show()
 
 # ################################################ AdaBoostClassifier starts
-clf = AdaBoostClassifier(n_estimators=100, random_state=0)
-clf.fit(x_train, y_train)
-clf_pred = clf.predict(x_test)
+abc = AdaBoostClassifier(n_estimators=100, random_state=0)
+abc.fit(x_train, y_train)
+clf_pred = abc.predict(x_test)
 print("AdaBoostClassifier Prediction : ", clf_pred)
 # gs_rfc_matrices = evaluate_preds(y_test, gs_rfc_pred)
-clf_matrices = evaluate_preds(clf, x_test, y_test, clf_pred)
+clf_matrices = evaluate_preds(abc, x_test, y_test, clf_pred)
 print("RandomForestClassifier parameters : ", rfc.get_params())
 # ################################################ AdaBoostClassifier ends
 

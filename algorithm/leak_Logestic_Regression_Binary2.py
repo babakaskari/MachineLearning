@@ -4,10 +4,12 @@ import matplotlib.pyplot as plt
 import sklearn
 from sklearn import preprocessing
 from sklearn.cluster import KMeans
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 import seaborn as sns
 from sklearn import metrics
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import Normalizer
 from gaussrank import *
@@ -95,6 +97,7 @@ x_ = s.fit_transform( x )
 assert x_.shape == x.shape
 X_unlabeled[x_cols] = x_
 
+# #################################################
 # ############################################################ SPLIT
 test_ind = round(len(X_labeled)*0.75)
 train_ind = test_ind + round(len(X_labeled)*0.25)
@@ -114,11 +117,13 @@ pseudo_labels = []
 ############################################################Assign value to initiate while loop
 high_prob = [1]
 ############################################################Loop will run until there are no more high-probability pseudo-labels
-while len(high_prob) > 0:
+while len(X_unlabeled) >= 0:
     # Fit classifier and make train/test predictions
     # print(y_train)
-    clf = LogisticRegression(max_iter=10000)
-    clf.fit(X_train, y_train.values.ravel())
+
+    clf = LogisticRegression(max_iter=100)
+    # clf.fit(X_train, y_train.values.ravel())
+    clf.fit(X_train, y_train)
     y_hat_train = clf.predict(X_train)
     y_hat_test = clf.predict(X_test)
 
@@ -138,6 +143,10 @@ while len(high_prob) > 0:
     preds = clf.predict(X_unlabeled)
     prob_0 = pred_probs[:, 0]
     prob_1 = pred_probs[:, 1]
+    print("pred_probs is :", pred_probs)
+    print("predss is :", preds)
+    print("prob 0 : ", prob_0)
+    print("prob 1 : ", prob_1)
 
     # Store predictions and probabilities in dataframe
     df_pred_prob = pd.DataFrame([])
@@ -156,10 +165,33 @@ while len(high_prob) > 0:
 
     # Add pseudo-labeled data to training data
     X_train = pd.concat([X_train, X_unlabeled.loc[high_prob.index]], axis=0)
+    print("highe prob is :", high_prob)
     high_prob = high_prob.drop(columns=['prob_0', 'prob_1'])
-    print(high_prob)
+    print("Number of null values in X_train :\n", X_train.isna().sum())
+    print("Number of null values in y_train :\n", y_train.isna().sum())
+    print("y_tain is : , y:::  ", y_train)
+    if high_prob.empty:
+        frames = [y_train, high_prob]
+        result = pd.concat(frames, ignore_index=False)
+        print("result is :", result)
+        result = pd.concat([y_train, high_prob], axis=0, ignore_index=False)
+        print("result shape is : ", result.shape)
+        print("result is after concat : \n", result)
+        y_train = pd.concat([y_train, high_prob])
 
-    y_train = pd.concat([y_train, high_prob])
+    unshuffeled_df = pd.concat([X_train, y_train["Leak Found"]], axis=1)
+    print("unshuffeled_df : ", unshuffeled_df)
+    # un_shuffeled_df = [X_train, y_train]
+    # print("un_shuffeled_df : ", un_shuffeled_df)
+
+    shuffeled_df = unshuffeled_df.sample(frac=1)
+    print("shuffeled_df : ", shuffeled_df)
+    y_train = shuffeled_df['Leak Found']
+    print("y_train : ", y_train)
+    print("Number of null values in y_train :\n", y_train.isna().sum())
+    X_train = shuffeled_df.drop(['Leak Found'], axis=1)
+    print("Number of null values in X_train :\n", X_train.isna().sum())
+
     # Drop pseudo-labeled instances from unlabeled data
     X_unlabeled = X_unlabeled.drop(index=high_prob.index)
     print(f"{len(X_unlabeled)} unlabeled instances remaining.\n")
@@ -167,3 +199,4 @@ while len(high_prob) > 0:
     # Update iteration counter
     iterations += 1
     print(f"Test f1: {test_f1s}")
+
