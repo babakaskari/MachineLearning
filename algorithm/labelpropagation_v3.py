@@ -91,7 +91,7 @@ dataset2 = dataset
 print("dataset features : ", dataset.columns)
 leak_found = dataset2["Leak Found"]
 dataset2 = dataset.drop(['Leak Found'], axis=1)
-########################################### APPLYING GUASSRANK NORMALIZATION
+# ########################################## APPLYING GUASSRANK NORMALIZATION
 
 x_cols = dataset2.columns[:]
 x = dataset2[x_cols]
@@ -101,7 +101,8 @@ x_ = s.fit_transform( x )
 assert x_.shape == x.shape
 dataset2[x_cols] = x_
 print("GaussRankScaler dataset description :\n ", dataset2.describe())
-############################################### standard scaler
+
+# ############################################## standard scaler
 """
 scaler = StandardScaler()
 data_scaled = scaler.fit_transform(x_train)
@@ -117,7 +118,6 @@ x_train, x_test, y_train, y_test = train_test_split(dataset2,
                                                     test_size=0.2,
                                                     random_state=42)
 
-# x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, stratify=y_train, test_size=0.2, random_state=42)
 print('Number of data points in train data:', x_train.shape[0])
 print('Number of data points in test data:', x_test.shape[0])
 # print('Number of data points in test data:', x_cv.shape[0])
@@ -128,20 +128,62 @@ pred = label_prpagation_model.predict(x_test)
 print("prediction : ", pred)
 print("Result of LabelPropagation:", metrics.accuracy_score(y_test, pred))
 
-error = []
+error_prop_knn = []
+error_spr_knn = []
+error_prop_rbf = []
+error_spr_rbf = []
+
 list_k = list(range(2, 11))
+
 for k in list_k:
     lp = LabelPropagation(kernel="knn", n_neighbors=k, max_iter=10)
     lp.fit(x_train, y_train)
     pred = lp.predict(x_test)
-    error.append(np.mean(pred != y_test))
+    error_prop_knn.append(np.mean(pred != y_test))
+
+for k in np.arange(1.0, 15.0, 0.5):
+    lp = LabelPropagation(kernel="rbf", gamma=k, max_iter=10)
+    lp.fit(x_train, y_train)
+    pred = lp.predict(x_test)
+    error_prop_rbf.append(np.mean(pred != y_test))
+
+for k in list_k:
+    lp = LabelSpreading(kernel="knn", n_neighbors=k, max_iter=10)
+    lp.fit(x_train, y_train)
+    pred = lp.predict(x_test)
+    error_spr_knn.append(np.mean(pred != y_test))
+
+for k in np.arange(1.0, 15.0, 0.5):
+    lp = LabelSpreading(kernel="rbf", gamma=k, max_iter=10)
+    lp.fit(x_train, y_train)
+    pred = lp.predict(x_test)
+    error_spr_rbf.append(np.mean(pred != y_test))
 
 # Plot sse against k
-
-plt.figure(figsize=(10, 6))
-plt.plot(range(2, 11), error, color="blue", linestyle="dashed", marker="o", markerfacecolor="red", markersize=10)
-plt.title("Error Rate vs. K Value")
+plt.figure(figsize=(12, 8))
+plt.subplot(2, 2, 1)
+plt.plot(range(2, 11), error_prop_knn, color="blue", linestyle="dashed", marker="o", markerfacecolor="red", markersize=10)
+plt.title("Error Rate vs. K Value knn Prob")
 plt.xlabel("K")
 plt.ylabel("Error Rate")
+
+plt.subplot(2, 2, 2)
+plt.plot(np.arange(1.0, 15.0, 0.5), error_prop_rbf, color="blue", linestyle="dashed", marker="o", markerfacecolor="red", markersize=10)
+plt.title("Error Rate vs. K Value rbf Prop")
+plt.xlabel("K")
+plt.ylabel("Error Rate")
+
+plt.subplot(2, 2, 3)
+plt.plot(range(2, 11), error_spr_knn, color="blue", linestyle="dashed", marker="o", markerfacecolor="red", markersize=10)
+plt.title("Error Rate vs. K Value knn Spr")
+plt.xlabel("K")
+plt.ylabel("Error Rate")
+
+plt.subplot(2, 2, 4)
+plt.plot(np.arange(1.0, 15.0, 0.5), error_spr_rbf, color="blue", linestyle="dashed", marker="o", markerfacecolor="red", markersize=10)
+plt.title("Error Rate vs. K Value rbf Spr")
+plt.xlabel("K")
+plt.ylabel("Error Rate")
+
 plt.show()
 
