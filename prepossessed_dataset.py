@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 from sklearn.metrics import plot_confusion_matrix
+from gaussrank import *
 import seaborn as sns
 sns.set()
 
@@ -56,6 +57,17 @@ def main():
     plt.show()
     leak_found = dataset["Leak Found"]
     dataset3 = dataset.drop(['Leak Found'], axis=1)
+    ########################################### APPLYING GUASSRANK NORMALIZATION
+
+    x_cols = dataset3.columns[:]
+    x = dataset3[x_cols]
+
+    s = GaussRankScaler()
+    x_ = s.fit_transform(x)
+    assert x_.shape == x.shape
+    dataset3[x_cols] = x_
+    # print("GaussRankScaler dataset description :\n ", dataset3.describe())
+    # #################################
     x_train, x_test, y_train, y_test = train_test_split(dataset3, leak_found, stratify=leak_found, test_size=0.2, random_state=42)
     x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, stratify=y_train, test_size=0.2, random_state=42)
     print('Number of data points in train data:', x_train.shape[0])
