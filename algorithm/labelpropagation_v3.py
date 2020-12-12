@@ -128,17 +128,19 @@ pred = label_prpagation_model.predict(x_test)
 print("prediction : ", pred)
 print("Result of LabelPropagation:", metrics.accuracy_score(y_test, pred))
 
-elbo = []
+error = []
 list_k = list(range(2, 11))
 for k in list_k:
     lp = LabelPropagation(kernel="knn", n_neighbors=k, max_iter=10)
     lp.fit(x_train, y_train)
     pred = lp.predict(x_test)
-    elbo.append(metrics.accuracy_score(y_test, pred))
+    error.append(np.mean(pred != y_test))
 
 # Plot sse against k
-plt.figure(figsize=(6, 6))
-plt.plot(list_k, elbo, '-o')
-plt.xlabel(r'Number of neighbours')
-plt.ylabel('Sum of squared distance')
+
+plt.figure(figsize=(10, 6))
+plt.plot(range(2, 11), error, color="blue", linestyle="dashed", marker="o", markerfacecolor="red", markersize=10)
+plt.title("Error Rate vs. K Value")
+plt.xlabel("K")
+plt.ylabel("Error Rate")
 plt.show()
