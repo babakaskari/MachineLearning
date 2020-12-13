@@ -10,6 +10,7 @@ from sklearn import preprocessing, metrics
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from xgboost.sklearn import XGBClassifier
 from sklearn.utils import shuffle
 from sklearn.base import BaseEstimator, RegressorMixin
 # from xgboost import XGBRegressor
@@ -22,6 +23,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import BaggingClassifier
 from sklearn.ensemble import ExtraTreesClassifier
+import xgboost as cgb
 from sklearn.ensemble import RandomTreesEmbedding
 
 import warnings
@@ -134,17 +136,21 @@ model_factory = [
     BayesianRidge(),
 ]
 """
+
 estimators = [
+    ('knn', KNeighborsClassifier(n_neighbors=5)),
     ('rfc', RandomForestClassifier(n_estimators=10, random_state=42)),
     ('adab', AdaBoostClassifier(n_estimators=100, random_state=0)),
     ('gb', GradientBoostingClassifier()),
     ('bc', BaggingClassifier(base_estimator=SVC(), n_estimators=10, random_state=0)),
     ('etc', ExtraTreesClassifier()),
     ('hgbc', HistGradientBoostingClassifier()),
+    ('xgb', XGBClassifier())
     ]
 
 
 model_factory = [
+    KNeighborsClassifier(),
     LogisticRegression(),
     RandomForestClassifier(),
     AdaBoostClassifier(),
@@ -155,16 +161,29 @@ model_factory = [
     StackingClassifier(estimators=estimators),
     VotingClassifier(estimators=estimators),
     HistGradientBoostingClassifier(),
+    XGBClassifier(),
+
 ]
 
-# #######################################
+# #######################################  XGBClassifier()
+clf_xgb = XGBClassifier()
+clf_xgb.fit(x_train, y_train)
+xgb_pred = clf_xgb.predict(x_test)
+xgb_matrices = evaluate_preds(clf_xgb, x_test, y_test, xgb_pred)
+
+# #################################################################
+# #######################################  KNeighborsClassifier()
+clf_knn = KNeighborsClassifier(n_neighbors=5)
+clf_knn.fit(x_train, y_train)
+knn_pred = clf_knn.predict(x_test)
+knn_matrices = evaluate_preds(clf_knn, x_test, y_test, knn_pred)
+
+# #################################################################
 # ################################################ AdaBoostClassifier starts
 clf_adab = AdaBoostClassifier(n_estimators=100, random_state=0)
 clf_adab.fit(x_train, y_train)
-clf_pred = clf_adab.predict(x_test)
-print("AdaBoostClassifier Prediction : ", clf_pred)
-# gs_rfc_matrices = evaluate_preds(y_test, gs_rfc_pred)
-adab_matrices = evaluate_preds(clf_adab, x_test, y_test, clf_pred)
+adab_pred = clf_adab.predict(x_test)
+adab_matrices = evaluate_preds(clf_adab, x_test, y_test, adab_pred)
 # ################################################ AdaBoostClassifier ends
 # ################################################ RandomForestClassifier
 clf_rfc = RandomForestClassifier()
@@ -181,19 +200,19 @@ gbc_matrices = evaluate_preds(clf_gbc, x_test, y_test, clf_pred)
 # ############################################################ BaggingClassifier
 clf_bc = BaggingClassifier(base_estimator=SVC(), n_estimators=10, random_state=0)
 clf_bc.fit(x_train, y_train)
-clf_pred = clf_bc.predict(x_test)
-bc_matrices = evaluate_preds(clf_bc, x_test, y_test, clf_pred)
+bc_pred = clf_bc.predict(x_test)
+bc_matrices = evaluate_preds(clf_bc, x_test, y_test, bc_pred)
 # ################################################ ExtraTreesClassifier
 clf_etc = ExtraTreesClassifier()
 clf_etc.fit(x_train, y_train)
-clf_pred = clf_etc.predict(x_test)
-et_matrices = evaluate_preds(clf_etc, x_test, y_test, clf_pred)
+etc_pred = clf_etc.predict(x_test)
+et_matrices = evaluate_preds(clf_etc, x_test, y_test, etc_pred)
 # ############################################################
 # ############################################################ HistGradientBoostingClassifier
 clf_hgbc = HistGradientBoostingClassifier()
 clf_hgbc.fit(x_train, y_train)
-clf_pred = clf_hgbc.predict(x_test)
-hgb_matrices = evaluate_preds(clf_hgbc, x_test, y_test, clf_pred)
+hgbc_pred = clf_hgbc.predict(x_test)
+hgb_matrices = evaluate_preds(clf_hgbc, x_test, y_test, hgbc_pred)
 # ############################################################
 # ############################################################ LogisticRegression
 clf_lr = LogisticRegression()
@@ -209,12 +228,14 @@ sc_matrices = evaluate_preds(clf_sc, x_test, y_test, clf_pred)
 # ############################################################
 # ############################################################   VotingClassifier
 clf_vc = VotingClassifier(estimators=[
+                            ("knn", clf_knn),
                             ('adab', clf_adab),
                             ('rfc', clf_rfc),
                             ('gnc', clf_gbc),
                             ("bc", clf_bc),
                             ("etc", clf_etc),
                             ("hgbc", clf_hgbc),
+                            ('xgb', clf_xgb),
                             ("lr", clf_lr)], voting='soft')
 
 clf_vc.fit(x_train, y_train)
@@ -225,6 +246,7 @@ vc_matrices = evaluate_preds(clf_vc, x_test, y_test, clf_pred)
 
 
 compare_matrices = pd.DataFrame({
+                                "KNeighbors": knn_matrices,
                                 "RandomForest": rfc_matrices,
                                 "AdaBoost" : adab_matrices,
                                 "GradientBoos": gbc_matrices,
@@ -233,11 +255,11 @@ compare_matrices = pd.DataFrame({
                                 "HistGradientBoosting": hgb_matrices,
                                 "LogisticRegression": lr_matrices,
                                 "StackingClassifier": sc_matrices,
-                                "VotingClassifier": vc_matrices
+                                "VotingClassifier": vc_matrices,
+                                "XGBClassifier": xgb_matrices,
                                  })
 
 compare_matrices.plot.bar(rot=0)
-
 plt.show()
 
 
