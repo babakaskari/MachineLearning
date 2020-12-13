@@ -121,7 +121,7 @@ x_train, x_test, y_train, y_test = train_test_split(dataset2,
 print('Number of data points in train data:', x_train.shape[0])
 print('Number of data points in test data:', x_test.shape[0])
 # print('Number of data points in test data:', x_cv.shape[0])
-
+print(y_test)
 label_prpagation_model = LabelPropagation(kernel="knn", n_neighbors=7, max_iter=10)
 label_prpagation_model.fit(x_train, y_train)
 pred = label_prpagation_model.predict(x_test)
