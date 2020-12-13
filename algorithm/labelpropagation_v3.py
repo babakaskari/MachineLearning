@@ -117,6 +117,7 @@ x_train, x_test, y_train, y_test = train_test_split(dataset2,
                                                     leak_found,
                                                     test_size=0.2,
                                                     random_state=42)
+print("y_train : ", y_train)
 
 print('Number of data points in train data:', x_train.shape[0])
 print('Number of data points in test data:', x_test.shape[0])

@@ -10,6 +10,7 @@ from sklearn import preprocessing, metrics
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from xgboost.sklearn import XGBClassifier
 from sklearn.utils import shuffle
 from sklearn.base import BaseEstimator, RegressorMixin
 # from xgboost import XGBRegressor
@@ -22,6 +23,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import BaggingClassifier
 from sklearn.ensemble import ExtraTreesClassifier
+import xgboost as cgb
 from sklearn.ensemble import RandomTreesEmbedding
 
 import warnings
@@ -143,6 +145,7 @@ estimators = [
     ('bc', BaggingClassifier(base_estimator=SVC(), n_estimators=10, random_state=0)),
     ('etc', ExtraTreesClassifier()),
     ('hgbc', HistGradientBoostingClassifier()),
+    ('xgb', XGBClassifier())
     ]
 
 
@@ -158,8 +161,17 @@ model_factory = [
     StackingClassifier(estimators=estimators),
     VotingClassifier(estimators=estimators),
     HistGradientBoostingClassifier(),
+    XGBClassifier(),
+
 ]
 
+# #######################################  XGBClassifier()
+clf_xgb = XGBClassifier()
+clf_xgb.fit(x_train, y_train)
+xgb_pred = clf_xgb.predict(x_test)
+xgb_matrices = evaluate_preds(clf_xgb, x_test, y_test, xgb_pred)
+
+# #################################################################
 # #######################################  KNeighborsClassifier()
 clf_knn = KNeighborsClassifier(n_neighbors=5)
 clf_knn.fit(x_train, y_train)
@@ -223,6 +235,7 @@ clf_vc = VotingClassifier(estimators=[
                             ("bc", clf_bc),
                             ("etc", clf_etc),
                             ("hgbc", clf_hgbc),
+                            ('xgb', clf_xgb),
                             ("lr", clf_lr)], voting='soft')
 
 clf_vc.fit(x_train, y_train)
@@ -242,7 +255,8 @@ compare_matrices = pd.DataFrame({
                                 "HistGradientBoosting": hgb_matrices,
                                 "LogisticRegression": lr_matrices,
                                 "StackingClassifier": sc_matrices,
-                                "VotingClassifier": vc_matrices
+                                "VotingClassifier": vc_matrices,
+                                "XGBClassifier": xgb_matrices,
                                  })
 
 compare_matrices.plot.bar(rot=0)
