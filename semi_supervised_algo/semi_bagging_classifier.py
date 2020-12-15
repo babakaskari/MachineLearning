@@ -7,11 +7,14 @@ from sklearn import preprocessing, metrics
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 import sklearn
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, BaggingClassifier
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import f1_score
 from gaussrank import *
 from sklearn.metrics import plot_confusion_matrix
+from sklearn.svm import SVC
 from xgboost import XGBClassifier
 import prepossessed_dataset
 
@@ -54,14 +57,14 @@ pseudo_labels = []
 high_prob = [1]
 
 # Loop will run until there are no more high-probability pseudo-labels
-while len(high_prob) > 0:
+while len(high_prob) > 0 and len(x_unlabeled) > 0:
     # Fit classifier and make train/test predictions
     # print(y_train)
     # clf = LogisticRegression(max_iter=10000)
     # clf.fit(X_train, y_train.values.ravel())
 
     # #######################################  XGBClassifier()
-    clf = XGBClassifier()
+    clf = BaggingClassifier(base_estimator=SVC(), n_estimators=10, random_state=0)
     clf.fit(x_train, y_train)
     # xgb_pred = clf.predict(x_train)
     # xgb_matrices = evaluate_preds(clf, x_train, y_test, xgb_pred)
