@@ -108,7 +108,7 @@ print("Description  : \n ", dummy_data.describe())
 # x_train = scaler.transform(x_train)
 # plt.show()
 ########################################### APPLYING GUASSRANK NORMALIZATION
-"""
+
 x_cols = x_train.columns[:]
 x = x_train[x_cols]
 
@@ -116,12 +116,12 @@ s = GaussRankScaler()
 x_ = s.fit_transform( x )
 assert x_.shape == x.shape
 x_train[x_cols] = x_
-"""
+
 ############################################### standard scaler
-scaler = StandardScaler()
-data_scaled = scaler.fit_transform(x_train)
-x_train = pd.DataFrame(data_scaled)
-print("x_train description : ", x_train.describe())
+# scaler = StandardScaler()
+# data_scaled = scaler.fit_transform(x_train)
+# x_train = pd.DataFrame(data_scaled)
+# print("x_train description : ", x_train.describe())
 ########################################## TO REPRESENT OUR DATASET, ALL COLUMNS IN MATRIX FORM
 x_train = pd.DataFrame(x_train)
 pd.plotting.scatter_matrix(x_train)

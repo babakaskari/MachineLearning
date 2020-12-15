@@ -107,8 +107,9 @@ x_labeled_data = x_labeled_data.drop(["Leak Found"], axis=1)
 scaler = StandardScaler()
 data_scaled = scaler.fit_transform(x_labeled_data)
 x_train = pd.DataFrame(data_scaled)
-print("x_train after normalization : ", x_train.head())
-print("x_train description after normalization: ", x_labeled_data.describe())
+print("x_train after normalization :\n ", x_train.head())
+print("x_train description after normalization:\n ", x_labeled_data.describe())
+
 
 # ############################################################
 # x_train = x_train.sample(frac=1)
@@ -122,6 +123,7 @@ x_train, x_cv, y_train, y_cv = train_test_split(x_train,
                                                 y_train,
                                                 stratify=y_train,
                                                 test_size=0.2)
+
 
 
 
