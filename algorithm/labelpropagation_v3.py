@@ -31,7 +31,6 @@ import seaborn as sns
 from sklearn import metrics
 sns.set()
 
-pd.set_option('mode.chained_assignment', None)
 
 df = pd.read_csv("../dataset/Acoustic Logger Data.csv")
 df1 = df.loc[df["LvlSpr"] == "Lvl"]
