@@ -507,6 +507,8 @@ def semi_super():
     labels = shuffled_labeled_df[["Leak Found"]]
     # df8.to_csv('OHE.csv')
     X_labeled = shuffled_labeled_df.drop(labels=['Leak Found'], axis=1)  # Labled train
+    X_labeled = X_labeled.drop(labels=['index'], axis=1)
+    X_labeled.reset_index(drop=True, inplace=True)
     X_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)  # Unlabled
     X_unlabeled = X_unlabeled.drop(labels=['index'], axis=1)
     X_unlabeled.reset_index(drop=True, inplace=True)

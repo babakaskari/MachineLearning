@@ -23,6 +23,7 @@ y_train = dataset["y_train"]
 x_test = dataset["x_test"]
 y_test = dataset["y_test"]
 print("X_unlabeld in xgb : \n", X_unlabeled)
+print("x_test : \n", x_test)
 
 
 def evaluate_preds(model, x_true, y_true, y_preds):
