@@ -44,6 +44,8 @@ labels = shuffled_labeled_df[["Leak Found"]]
 # df8.to_csv('OHE.csv')
 X_labeled = shuffled_labeled_df.drop(labels=['Leak Found'], axis=1) #Labled train
 X_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)      #Unlabled
+print(X_labeled)
+print(X_unlabeled)
 # =======================labeled data
 x_cols = X_labeled.columns[:]
 x = X_labeled[x_cols]
