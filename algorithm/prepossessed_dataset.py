@@ -319,7 +319,7 @@ def labeled():
     return data_dict
 
 
-def semi_super():
+def propagation():
     df = pd.read_csv("../dataset/Acoustic Logger Data.csv")
     df1 = df.loc[df["LvlSpr"] == "Lvl"]
     df3 = df.loc[df["LvlSpr"] == "Spr"]
@@ -416,4 +416,84 @@ def semi_super():
     }
 
     return data_dict
+
+
+def semi_super():
+
+    df = pd.read_csv("../dataset/Acoustic Logger Data.csv")
+    df1 = df.loc[df["LvlSpr"] == "Lvl"]
+    df3 = df.loc[df["LvlSpr"] == "Spr"]
+    df2 = pd.melt(df1, id_vars=['LvlSpr', 'ID'], value_vars=df.loc[:0, '02-May':].columns.values.tolist(),
+                  var_name='Date')
+    df4 = pd.melt(df3, id_vars=['LvlSpr', 'ID'], value_vars=df.loc[:0, '02-May':].columns.values.tolist(),
+                  var_name='Date')
+    df5 = pd.merge(df2, df4, on=['ID', 'Date'], suffixes=("_Lvl", "_Spr"))
+    df6 = df5.drop(['LvlSpr_Lvl', 'LvlSpr_Spr'], axis=1).dropna()
+    df6['Date'] = pd.to_datetime(df6['Date'], format='%d-%b')
+    df6['Date'] = df6['Date'].dt.strftime('%d-%m')
+
+    df7 = pd.read_csv("../dataset/Leak Alarm Results.csv")
+    df7['Date Visited'] = pd.to_datetime(df7['Date Visited'], format='%d/%m/%Y')
+    df7['Date Visited'] = df7['Date Visited'].dt.strftime('%d-%m')
+    df7 = df7.rename(columns={'Date Visited': 'Date'})
+
+    df8 = pd.merge(df6, df7, on=['ID', 'Date'], how='left')
+    df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
+    df8["Leak Alarm"] = df8["Leak Alarm"].fillna("N")
+    columns_to_OHE = df8[['Date', 'Leak Alarm']]
+    not_OHE_columns_df = df8[['ID', 'value_Lvl', 'value_Spr', 'Leak Found']]
+    onehot_encoder = OneHotEncoder(sparse=False)
+    onehot_encoded = onehot_encoder.fit_transform(columns_to_OHE)
+    ohe_columns_df = pd.DataFrame(data=onehot_encoded, index=[i for i in range(onehot_encoded.shape[0])],
+                                  columns=['f' + str(i) for i in range(onehot_encoded.shape[1])])
+    preprocessed_df = ohe_columns_df.join(not_OHE_columns_df)
+    preprocessed_df.loc[(preprocessed_df['Leak Found'] == 'N-PRV'), 'Leak Found'] = 'N'
+    print(preprocessed_df)
+    labeled_df = preprocessed_df.loc[preprocessed_df['Leak Found'].notnull()]
+    unlabeled_df = preprocessed_df.loc[preprocessed_df['Leak Found'].isnull()]
+    shuffled_labeled_df = labeled_df.sample(frac=1).reset_index(drop=True)
+    labels = shuffled_labeled_df[["Leak Found"]]
+    # df8.to_csv('OHE.csv')
+    X_labeled = shuffled_labeled_df.drop(labels=['Leak Found'], axis=1)  # Labled train
+    X_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)  # Unlabled
+    # =======================labeled data
+    x_cols = X_labeled.columns[:]
+    x = X_labeled[x_cols]
+
+    s = GaussRankScaler()
+    x_ = s.fit_transform(x)
+    assert x_.shape == x.shape
+    X_labeled[x_cols] = x_
+
+    # ===================== unlabeled data
+
+    x_cols = X_unlabeled.columns[:]
+    x = X_unlabeled[x_cols]
+
+    s = GaussRankScaler()
+    x_ = s.fit_transform(x)
+    assert x_.shape == x.shape
+    X_unlabeled[x_cols] = x_
+
+    # #################################################
+    test_ind = round(len(X_labeled) * 0.70)
+    train_ind = test_ind + round(len(X_labeled) * 0.30)
+    x_test = X_labeled.iloc[:test_ind]
+    x_train = X_labeled.iloc[test_ind:train_ind]
+    y_test = labels.iloc[:test_ind]
+    y_train = labels.iloc[test_ind:train_ind]
+
+    data_dict = {
+
+                "x_train": x_train,
+                "y_train": y_train,
+                "x_test": x_test,
+                "y_test": y_test,
+
+    }
+
+    return data_dict
+
+
+
 
