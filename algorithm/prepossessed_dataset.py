@@ -419,7 +419,6 @@ def propagation():
 
 
 def semi_super():
-
     df = pd.read_csv("../dataset/Acoustic Logger Data.csv")
     df1 = df.loc[df["LvlSpr"] == "Lvl"]
     df3 = df.loc[df["LvlSpr"] == "Spr"]
@@ -439,18 +438,72 @@ def semi_super():
 
     df8 = pd.merge(df6, df7, on=['ID', 'Date'], how='left')
     df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
-    df8["Leak Alarm"] = df8["Leak Alarm"].fillna("N")
-    columns_to_OHE = df8[['Date', 'Leak Alarm']]
-    not_OHE_columns_df = df8[['ID', 'value_Lvl', 'value_Spr', 'Leak Found']]
-    onehot_encoder = OneHotEncoder(sparse=False)
-    onehot_encoded = onehot_encoder.fit_transform(columns_to_OHE)
-    ohe_columns_df = pd.DataFrame(data=onehot_encoded, index=[i for i in range(onehot_encoded.shape[0])],
-                                  columns=['f' + str(i) for i in range(onehot_encoded.shape[1])])
-    preprocessed_df = ohe_columns_df.join(not_OHE_columns_df)
-    preprocessed_df.loc[(preprocessed_df['Leak Found'] == 'N-PRV'), 'Leak Found'] = 'N'
-    print(preprocessed_df)
-    labeled_df = preprocessed_df.loc[preprocessed_df['Leak Found'].notnull()]
-    unlabeled_df = preprocessed_df.loc[preprocessed_df['Leak Found'].isnull()]
+    # df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
+    # df8["Leak Found"] = df8["Leak Found"].fillna(-1)
+
+    dataset = df8
+    indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
+    # Delete these row indexes from dataFrame
+    dataset.drop(indexNames, index=None, inplace=True)
+    dataset.reset_index(inplace=True)
+    dataset["Leak Found"].replace(["Y", "N"], [1, 0], inplace=True)
+    # dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
+    dataset1 = dataset
+    dataset = dataset1.drop(['Leak Alarm'], axis=1)
+
+    # ############################################################ Convert Date categorical to numerical
+    # dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
+    date_encoder = preprocessing.LabelEncoder()
+    date_encoder.fit(dataset['Date'])
+    # print(list(date_encoder.classes_))
+    dataset['Date'] = date_encoder.transform(dataset['Date'])
+    # print(dataset.to_string(max_rows=200))
+    dataset = dataset.drop_duplicates()
+    print(" dataset description : ", dataset.describe())
+    # ##############################################
+
+    # corrolation matrix
+    print(dataset.columns.values)
+    df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
+    corrMatrix = df.corr()
+    sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
+    # plt.show()
+    tempdata = dataset
+    dataset = dataset.loc[:80]
+    dataset = dataset.sample(frac=1)
+    print("dataset shape: ", dataset.shape)
+    print("Number of null values in dataset : \n", dataset.isna().sum())
+    # print("dataset : ", dataset.shape[0])
+    # dataset2 = dataset.drop(["Leak Found"], axis=1)
+    dataset2 = dataset
+    print("dataset features : ", dataset.columns)
+    leak_found = dataset2["Leak Found"]
+    dataset2 = dataset.drop(['Leak Found'], axis=1)
+
+    # ########################################## APPLYING GUASSRANK NORMALIZATION
+    """
+    x_cols = dataset2.columns[:]
+    x = dataset2[x_cols]
+
+    s = GaussRankScaler()
+    x_ = s.fit_transform(x)
+    assert x_.shape == x.shape
+    dataset2[x_cols] = x_
+    print("GaussRankScaler dataset description :\n ", dataset2.describe())
+    """
+    # ############################################## standard scaler
+    """
+    scaler = StandardScaler()
+    data_scaled = scaler.fit_transform(x_train)
+    x_train = pd.DataFrame(data_scaled)
+    print("x_train description : ", x_train.describe())
+    """
+    # ##############################################
+    print("dataset2 features : ", dataset2.columns)
+
+    print(dataset2)
+    labeled_df = dataset2.loc[dataset2['Leak Found'].notnull()]
+    unlabeled_df = dataset2.loc[dataset2['Leak Found'].isnull()]
     shuffled_labeled_df = labeled_df.sample(frac=1).reset_index(drop=True)
     labels = shuffled_labeled_df[["Leak Found"]]
     # df8.to_csv('OHE.csv')
