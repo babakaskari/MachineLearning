@@ -22,6 +22,8 @@ x_train = dataset["x_train"]
 y_train = dataset["y_train"]
 x_test = dataset["x_test"]
 y_test = dataset["y_test"]
+print("X_unlabeld in xgb : \n", X_unlabeled)
+
 
 def evaluate_preds(model, x_true, y_true, y_preds):
     accuracy = metrics.accuracy_score(y_true, y_preds)

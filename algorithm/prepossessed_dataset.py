@@ -508,6 +508,9 @@ def semi_super():
     # df8.to_csv('OHE.csv')
     X_labeled = shuffled_labeled_df.drop(labels=['Leak Found'], axis=1)  # Labled train
     X_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)  # Unlabled
+    X_unlabeled = X_unlabeled.drop(labels=['index'], axis=1)
+    X_unlabeled.reset_index(drop=True, inplace=True)
+    # print("X_unlabeld \n", X_unlabeled)
     # =======================labeled data
     x_cols = X_labeled.columns[:]
     x = X_labeled[x_cols]
@@ -534,6 +537,10 @@ def semi_super():
     x_train = X_labeled.iloc[test_ind:train_ind]
     y_test = labels.iloc[:test_ind]
     y_train = labels.iloc[test_ind:train_ind]
+    print("X_unlabeld features  ", X_unlabeled.columns)
+    print("X_unlabeld \n", X_unlabeled)
+
+
 
     data_dict = {
                 "X_unlabeled": X_unlabeled,
@@ -545,7 +552,5 @@ def semi_super():
     }
 
     return data_dict
-
-
 
 
