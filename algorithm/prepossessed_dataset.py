@@ -469,7 +469,6 @@ def semi_super():
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
     # plt.show()
     tempdata = dataset
-    dataset = dataset.loc[:80]
     dataset = dataset.sample(frac=1)
     print("dataset shape: ", dataset.shape)
     print("Number of null values in dataset : \n", dataset.isna().sum())
@@ -478,7 +477,7 @@ def semi_super():
     dataset2 = dataset
     print("dataset features : ", dataset.columns)
     leak_found = dataset2["Leak Found"]
-    dataset2 = dataset.drop(['Leak Found'], axis=1)
+    # dataset2 = dataset.drop(['Leak Found'], axis=1)
 
     # ########################################## APPLYING GUASSRANK NORMALIZATION
     """
