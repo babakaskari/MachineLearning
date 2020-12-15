@@ -36,11 +36,13 @@ ohe_columns_df = pd.DataFrame(data=onehot_encoded, index=[i for i in range(oneho
 preprocessed_df = ohe_columns_df.join(not_OHE_columns_df)
 preprocessed_df.loc[(preprocessed_df['Leak Found'] == 'N-PRV'), 'Leak Found'] = 'N'
 print(preprocessed_df)
+
 labeled_df = preprocessed_df.loc[preprocessed_df['Leak Found'].notnull()]
 unlabeled_df = preprocessed_df.loc[preprocessed_df['Leak Found'].isnull()]
 shuffled_labeled_df = labeled_df.sample(frac=1).reset_index(drop=True)
 labels = shuffled_labeled_df[["Leak Found"]]
 # df8.to_csv('OHE.csv')
+
 X_labeled = shuffled_labeled_df.drop(labels=['Leak Found'], axis=1) #Labled train
 X_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)      #Unlabled
 # =======================labeled data
