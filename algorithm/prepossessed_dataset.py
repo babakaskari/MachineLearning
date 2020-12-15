@@ -498,9 +498,9 @@ def semi_super():
     print("x_train description : ", x_train.describe())
     """
     # ##############################################
-    print("dataset2 features : ", dataset2.columns)
+    #print("dataset2 features : ", dataset2.columns)
 
-    print(dataset2)
+    # print(dataset2)
     labeled_df = dataset2.loc[dataset2['Leak Found'].notnull()]
     unlabeled_df = dataset2.loc[dataset2['Leak Found'].isnull()]
     shuffled_labeled_df = labeled_df.sample(frac=1).reset_index(drop=True)
