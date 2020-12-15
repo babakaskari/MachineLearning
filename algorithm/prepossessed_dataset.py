@@ -468,7 +468,7 @@ def semi_super():
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
     # plt.show()
-    tempdata = dataset
+
     dataset = dataset.sample(frac=1)
     print("dataset shape: ", dataset.shape)
     print("Number of null values in dataset : \n", dataset.isna().sum())
@@ -476,7 +476,7 @@ def semi_super():
     # dataset2 = dataset.drop(["Leak Found"], axis=1)
     dataset2 = dataset
     print("dataset features : ", dataset.columns)
-    leak_found = dataset2["Leak Found"]
+    # leak_found = dataset2["Leak Found"]
     # dataset2 = dataset.drop(['Leak Found'], axis=1)
 
     # ########################################## APPLYING GUASSRANK NORMALIZATION
@@ -498,7 +498,7 @@ def semi_super():
     print("x_train description : ", x_train.describe())
     """
     # ##############################################
-    #print("dataset2 features : ", dataset2.columns)
+    # print("dataset2 features : ", dataset2.columns)
 
     # print(dataset2)
     labeled_df = dataset2.loc[dataset2['Leak Found'].notnull()]
@@ -506,46 +506,43 @@ def semi_super():
     shuffled_labeled_df = labeled_df.sample(frac=1).reset_index(drop=True)
     labels = shuffled_labeled_df[["Leak Found"]]
     # df8.to_csv('OHE.csv')
-    X_labeled = shuffled_labeled_df.drop(labels=['Leak Found'], axis=1)  # Labled train
-    X_labeled = X_labeled.drop(labels=['index'], axis=1)
-    X_labeled.reset_index(drop=True, inplace=True)
-    X_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)  # Unlabled
-    X_unlabeled = X_unlabeled.drop(labels=['index'], axis=1)
-    X_unlabeled.reset_index(drop=True, inplace=True)
+    x_labeled = shuffled_labeled_df.drop(labels=['Leak Found'], axis=1)  # Labled train
+    x_labeled = x_labeled.drop(labels=['index'], axis=1)
+    x_labeled.reset_index(drop=True, inplace=True)
+    x_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)  # Unlabled
+    x_unlabeled = x_unlabeled.drop(labels=['index'], axis=1)
+    x_unlabeled.reset_index(drop=True, inplace=True)
     # print("X_unlabeld \n", X_unlabeled)
     # =======================labeled data
-    x_cols = X_labeled.columns[:]
-    x = X_labeled[x_cols]
+    x_cols = x_labeled.columns[:]
+    x = x_labeled[x_cols]
 
     s = GaussRankScaler()
     x_ = s.fit_transform(x)
     assert x_.shape == x.shape
-    X_labeled[x_cols] = x_
+    x_labeled[x_cols] = x_
 
     # ===================== unlabeled data
 
-    x_cols = X_unlabeled.columns[:]
-    x = X_unlabeled[x_cols]
+    x_cols = x_unlabeled.columns[:]
+    x = x_unlabeled[x_cols]
 
     s = GaussRankScaler()
     x_ = s.fit_transform(x)
     assert x_.shape == x.shape
-    X_unlabeled[x_cols] = x_
+    x_unlabeled[x_cols] = x_
 
     # #################################################
-    test_ind = round(len(X_labeled) * 0.70)
-    train_ind = test_ind + round(len(X_labeled) * 0.30)
-    x_test = X_labeled.iloc[:test_ind]
-    x_train = X_labeled.iloc[test_ind:train_ind]
+    test_ind = round(len(x_labeled) * 0.70)
+    train_ind = test_ind + round(len(x_labeled) * 0.30)
+    x_test = x_labeled.iloc[:test_ind]
+    x_train = x_labeled.iloc[test_ind:train_ind]
     y_test = labels.iloc[:test_ind]
     y_train = labels.iloc[test_ind:train_ind]
-    print("X_unlabeld features  ", X_unlabeled.columns)
-    print("X_unlabeld \n", X_unlabeled)
-
-
-
+    print("X_unlabeld features  ", x_unlabeled.columns)
+    # print("X_unlabeld \n", X_unlabeled)
     data_dict = {
-                "X_unlabeled": X_unlabeled,
+                "x_unlabeled": x_unlabeled,
                 "x_train": x_train,
                 "y_train": y_train,
                 "x_test": x_test,
