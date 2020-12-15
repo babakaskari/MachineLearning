@@ -81,7 +81,7 @@ while len(high_prob) > 0:
     print(f"Now predicting labels for unlabeled data...")
 
     pred_probs = clf.predict_proba(x_unlabeled)
-    preds = clf.predict(X_unlabeled)
+    preds = clf.predict(x_unlabeled)
     prob_0 = pred_probs[:, 0]
     prob_1 = pred_probs[:, 1]
     # Store predictions and probabilities in dataframe
@@ -89,7 +89,7 @@ while len(high_prob) > 0:
     df_pred_prob['Leak Found'] = preds
     df_pred_prob['prob_0'] = prob_0
     df_pred_prob['prob_1'] = prob_1
-    df_pred_prob.index = X_unlabeled.index
+    df_pred_prob.index = x_unlabeled.index
     # Separate predictions with > 99% probability
     high_prob = pd.concat([df_pred_prob.loc[df_pred_prob['prob_0'] > 0.99],
                            df_pred_prob.loc[df_pred_prob['prob_1'] > 0.99]],
@@ -107,8 +107,8 @@ while len(high_prob) > 0:
     y_train = pd.concat([y_train, high_prob])
 
     # Drop pseudo-labeled instances from unlabeled data
-    X_unlabeled = X_unlabeled.drop(index=high_prob.index)
-    print(f"{len(X_unlabeled)} unlabeled instances remaining.\n")
+    x_unlabeled = x_unlabeled.drop(index=high_prob.index)
+    print(f"{len(x_unlabeled)} unlabeled instances remaining.\n")
 
     # Update iteration counter
     iterations += 1
