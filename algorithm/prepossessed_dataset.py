@@ -537,7 +537,7 @@ def semi_super():
     y_train = labels.iloc[test_ind:train_ind]
 
     data_dict = {
-
+                "X_unlabeled": X_unlabeled,
                 "x_train": x_train,
                 "y_train": y_train,
                 "x_test": x_test,
