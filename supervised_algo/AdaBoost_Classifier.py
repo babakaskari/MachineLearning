@@ -8,7 +8,7 @@ from sklearn.metrics import roc_auc_score
 from sklearn.semi_supervised import LabelPropagation
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import preprocessing
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn import metrics
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
@@ -40,8 +40,6 @@ x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
 
-
-clf = XGBClassifier()
+clf = AdaBoostClassifier(n_estimators=100, random_state=0)
 clf.fit(x_train, y_train)
-# xgb_pred = clf.predict(x_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
