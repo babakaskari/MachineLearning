@@ -41,6 +41,7 @@ x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
 
-clf = BaggingClassifier(base_estimator=SVC(), n_estimators=10, random_state=0)
+base_cls = RandomForestClassifier()
+clf = BaggingClassifier(base_estimator=base_cls, n_estimators=10, random_state=0)
 clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
