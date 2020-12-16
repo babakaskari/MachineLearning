@@ -577,7 +577,7 @@ def evaluate_preds(model, x_train, y_train,  x_true, y_true, x_cv, y_cv):
     print("Model score is : ", model.score(x_true, y_true))
     # print(np.mean(y_test == y_pred))
     pred_probality = model.predict_proba(x_true)
-    print("Predict probability : ", pred_probality)
+    # print("Predict probability : ", pred_probality)
     # cross_validation score
     cross_validation_score = cross_val_score(model, x_train, y_train, cv=6)
     print("Cross validation score : ", cross_validation_score)
@@ -599,7 +599,7 @@ def evaluate_preds(model, x_train, y_train,  x_true, y_true, x_cv, y_cv):
     plt.title("Receiver Operating Characteristic (ROC) Curve")
     plt.legend()
     plt.show()
-    
+
 
 
 

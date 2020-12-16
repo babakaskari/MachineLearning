@@ -27,10 +27,10 @@ import seaborn as sns
 from sklearn import metrics
 sns.set()
 
-dataset = prepossessed_dataset.just_labeled()
-print(dataset)
-print("x_train  :  ", dataset["x_train"])
-print("y_train  :  ", dataset["y_train"])
+dataset = prepossessed_dataset.labeled()
+# print(dataset)
+# print("x_train  :  ", dataset["x_train"])
+# print("y_train  :  ", dataset["y_train"])
 x_train = dataset["x_train"]
 y_train = dataset["y_train"]
 x_test = dataset["x_test"]
