@@ -306,7 +306,10 @@ def labeled():
     print("x_train description : ", x_train.describe())
     """
     # ##############################################
-
+    print("dtatset2 shape : ", dataset2.shape)
+    print("dtatset2 features : ", dataset2.columns)
+    print("leak_found shape : ", leak_found.shape)
+    print("leak_found features : ", leak_found.columns)
     x_train, x_test, y_train, y_test = train_test_split(dataset2,
                                                         leak_found,
                                                         test_size=0.2,
@@ -316,6 +319,7 @@ def labeled():
                                                     y_train,
                                                     stratify=y_train,
                                                     test_size=0.2)
+
 
    # print("x_train : ", x_train)
     # print("x_test : ", x_test)
@@ -328,7 +332,7 @@ def labeled():
 
         "x_train": x_train,
         "y_train": y_train,
-        "x_test": y_test,
+        "x_test": x_test,
         "y_test": y_test,
         "x_cv": x_cv,
         "y_cv": y_cv,
@@ -430,7 +434,7 @@ def propagation():
 
         "x_train": x_train,
         "y_train": y_train,
-        "x_test": y_test,
+        "x_test": x_test,
         "y_test": y_test,
 
     }
