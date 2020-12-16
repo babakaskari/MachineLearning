@@ -263,13 +263,12 @@ def labeled():
     dataset = dataset.drop(['index'], axis=1)
     print(("df8 shape : ", df8.shape))
 
-
     # corrolation matrix
     print(dataset.columns.values)
     df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
-    # plt.show()
+    plt.show()
 
 
     # dataset = dataset.loc[:80]
@@ -383,7 +382,7 @@ def propagation():
     df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
-    # plt.show()
+    plt.show()
     tempdata = dataset
     dataset = dataset.loc[:80]
     dataset = dataset.sample(frac=1)
