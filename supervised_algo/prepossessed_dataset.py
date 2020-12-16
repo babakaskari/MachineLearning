@@ -71,8 +71,8 @@ def just_labeled():
     scaler = StandardScaler()
     data_scaled = scaler.fit_transform(x_labeled_data)
     x_train = pd.DataFrame(data_scaled)
-    print("x_train after normalization : ", x_train.head())
-    print("x_train description after normalization: ", x_labeled_data.describe())
+    # print("x_train after normalization : ", x_train.head())
+    # print("x_train description after normalization: ", x_labeled_data.describe())
 
     # ############################################################
     # x_train = x_train.sample(frac=1)
@@ -86,10 +86,6 @@ def just_labeled():
                                                     y_train,
                                                     stratify=y_train,
                                                     test_size=0.2)
-
-    print('Number of data points in train data:', x_train.shape[0])
-    print('Number of data points in test data:', x_test.shape[0])
-    print('Number of data points in test data:', x_cv.shape[0])
 
     data_dict = {
         "x_train": x_train,
@@ -165,8 +161,8 @@ def unlabeled():
     plt.show()
     # #####################################################
     x_test = x_test.drop(["Leak Found"], axis=1)
-    print("x_test shape is equal to :  ", x_test.shape)
-    print("dataset features :  ", dataset.columns)
+    # print("x_test shape is equal to :  ", x_test.shape)
+    # print("dataset features :  ", dataset.columns)
     # ############################################# CREATING DUMMY_DATA
     # x_centroid = np.array(x_test.iloc[[16, 17], ])
     dummy_data = dataset.drop(['Leak Found'], axis=1)
@@ -204,7 +200,7 @@ def unlabeled():
     scaler = StandardScaler()
     data_scaled = scaler.fit_transform(x_train)
     x_train = pd.DataFrame(data_scaled)
-    print("x_train description : ", x_train.describe())
+    print("x_train description : \n", x_train.describe())
     ########################################## TO REPRESENT OUR DATASET, ALL COLUMNS IN MATRIX FORM
     x_train = pd.DataFrame(x_train)
 
@@ -258,13 +254,13 @@ def labeled():
     dataset['Date'] = date_encoder.transform(dataset['Date'])
     # print(dataset.to_string(max_rows=200))
     dataset = dataset.drop_duplicates()
-    print(" dataset description : ", dataset.describe())
+    print(" dataset description : \n", dataset.describe())
     # ##############################################
     dataset = dataset.drop(['index'], axis=1)
-    print(("df8 shape : ", df8.shape))
+    # print(("df8 shape : ", df8.shape))
 
     # corrolation matrix
-    print(dataset.columns.values)
+    # print(dataset.columns.values)
     df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
@@ -277,8 +273,8 @@ def labeled():
 
     leak_found = dataset.drop(['ID', 'Date', 'value_Lvl', 'value_Spr'], axis=1)
     dataset2 = dataset.drop(['Leak Found'], axis=1)
-    print("leak found shape : ", leak_found.shape)
-    print("dataset2 shape : ", dataset2.shape)
+    # print("leak found shape : ", leak_found.shape)
+    # print("dataset2 shape : ", dataset2.shape)
     # ########################################## APPLYING GUASSRANK NORMALIZATION
 
     x_cols = dataset2.columns[:]
@@ -308,14 +304,6 @@ def labeled():
                                                     y_train,
                                                     stratify=y_train,
                                                     test_size=0.2)
-
-
-   # print("x_train : ", x_train)
-    # print("x_test : ", x_test)
-   # print("x_train shape", x_train.shape)
-   # print("x_test shape", x_test.shape)
-   # print("x_train : ", x_train.columns)
-   # print("x_test : ", x_test.colums)
 
     data_dict = {
 
@@ -373,11 +361,11 @@ def propagation():
     dataset['Date'] = date_encoder.transform(dataset['Date'])
     # print(dataset.to_string(max_rows=200))
     dataset = dataset.drop_duplicates()
-    print(" dataset description : ", dataset.describe())
+    print(" dataset description : \n", dataset.describe())
     # ##############################################
 
     # corrolation matrix
-    print(dataset.columns.values)
+    # print(dataset.columns.values)
     df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
@@ -385,7 +373,7 @@ def propagation():
     tempdata = dataset
     dataset = dataset.loc[:80]
     dataset = dataset.sample(frac=1)
-    print("dataset shape: ", dataset.shape)
+    # print("dataset shape: ", dataset.shape)
     print("Number of null values in dataset : \n", dataset.isna().sum())
     # print("dataset : ", dataset.shape[0])
     # dataset2 = dataset.drop(["Leak Found"], axis=1)
@@ -472,23 +460,23 @@ def semi_super():
     dataset['Date'] = date_encoder.transform(dataset['Date'])
     # print(dataset.to_string(max_rows=200))
     dataset = dataset.drop_duplicates()
-    print(" dataset description : ", dataset.describe())
+    print(" dataset description : \n", dataset.describe())
     # ##############################################
 
     # corrolation matrix
-    print(dataset.columns.values)
+    # print(dataset.columns.values)
     df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
     # plt.show()
 
     dataset = dataset.sample(frac=1)
-    print("dataset shape: ", dataset.shape)
+    # print("dataset shape: ", dataset.shape)
     print("Number of null values in dataset : \n", dataset.isna().sum())
     # print("dataset : ", dataset.shape[0])
     # dataset2 = dataset.drop(["Leak Found"], axis=1)
     dataset2 = dataset
-    print("dataset features : ", dataset.columns)
+    # print("dataset features : ", dataset.columns)
     # leak_found = dataset2["Leak Found"]
     # dataset2 = dataset.drop(['Leak Found'], axis=1)
 
@@ -552,7 +540,7 @@ def semi_super():
     x_train = x_labeled.iloc[test_ind:train_ind]
     y_test = labels.iloc[:test_ind]
     y_train = labels.iloc[test_ind:train_ind]
-    print("X_unlabeld features  ", x_unlabeled.columns)
+    # print("X_unlabeld features  ", x_unlabeled.columns)
     # print("X_unlabeld \n", X_unlabeled)
     data_dict = {
                 "x_unlabeled": x_unlabeled,

@@ -149,10 +149,10 @@ print("x_test features  :  ", x_test.columns)
 # plt.scatter(x_train["Date"], x_train["value_Lvl"], s=50)
 # plt.scatter(centroids[:, 0], centroids[:, 1], s=300, c='red')
 # plt.show()
-############################################# ACCURACY
+# ############################################ ACCURACY
 print("Prediction : \n ", y_pred)
 # print(metrics.accuracy_score(y_test, y_pred))
-############################################# TO GET THE FINAL SCATTER AFTER PREDICTION
+# ############################################ TO GET THE FINAL SCATTER AFTER PREDICTION
 d_numpy = x_train.to_numpy()
 
 plt.scatter(d_numpy[y_pred == 0, 2], d_numpy[y_pred == 0, 3], s=25, c='green', label='Cluster 1')

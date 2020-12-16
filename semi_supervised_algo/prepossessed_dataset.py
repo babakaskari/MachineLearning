@@ -67,7 +67,7 @@ def just_labeled():
     scaler = StandardScaler()
     data_scaled = scaler.fit_transform(x_labeled_data)
     x_train = pd.DataFrame(data_scaled)
-    print("x_train after normalization : ", x_train.head())
+    # print("x_train after normalization : ", x_train.head())
     print("x_train description after normalization: ", x_labeled_data.describe())
 
     # ############################################################
@@ -83,9 +83,9 @@ def just_labeled():
                                                     stratify=y_train,
                                                     test_size=0.2)
 
-    print('Number of data points in train data:', x_train.shape[0])
-    print('Number of data points in test data:', x_test.shape[0])
-    print('Number of data points in test data:', x_cv.shape[0])
+    # print('Number of data points in train data:', x_train.shape[0])
+    # print('Number of data points in test data:', x_test.shape[0])
+    # print('Number of data points in test data:', x_cv.shape[0])
 
     data_dict = {
         "x_train": x_train,
@@ -161,8 +161,8 @@ def unlabeled():
     # plt.show()
     # #####################################################
     x_test = x_test.drop(["Leak Found"], axis=1)
-    print("x_test shape is equal to :  ", x_test.shape)
-    print("dataset features :  ", dataset.columns)
+    # print("x_test shape is equal to :  ", x_test.shape)
+    # print("dataset features :  ", dataset.columns)
     # ############################################# CREATING DUMMY_DATA
     # x_centroid = np.array(x_test.iloc[[16, 17], ])
     dummy_data = dataset.drop(['Leak Found'], axis=1)
