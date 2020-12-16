@@ -276,13 +276,7 @@ def labeled():
     dataset = dataset.sample(frac=1)
 
     print("Number of null values in dataset : \n", dataset.isna().sum())
-    # print("dataset : ", dataset.shape[0])
-    # dataset2 = dataset.drop(["Leak Found"], axis=1)
-    # dataset2 = dataset
-   # print(("dataset shape : ", dataset.shape))
-    # print("dataset2  : ", dataset2.columns)
-    # print("dataset2 shape : ", dataset2.shape)
-    # leak_found = dataset2["Leak Found"]
+
     leak_found = dataset.drop(['ID', 'Date', 'value_Lvl', 'value_Spr'], axis=1)
     dataset2 = dataset.drop(['Leak Found'], axis=1)
     print("leak found shape : ", leak_found.shape)
@@ -306,10 +300,7 @@ def labeled():
     print("x_train description : ", x_train.describe())
     """
     # ##############################################
-    print("dtatset2 shape : ", dataset2.shape)
-    print("dtatset2 features : ", dataset2.columns)
-    print("leak_found shape : ", leak_found.shape)
-    print("leak_found features : ", leak_found.columns)
+
     x_train, x_test, y_train, y_test = train_test_split(dataset2,
                                                         leak_found,
                                                         test_size=0.2,
