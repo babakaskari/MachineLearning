@@ -21,6 +21,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn.model_selection import cross_validate
+from sklearn.neighbors import KNeighborsClassifier
 import prepossessed_dataset
 import evaluator
 from sklearn.metrics import roc_curve
@@ -36,6 +37,6 @@ y_test = dataset["y_test"]
 x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
-clf = RandomForestClassifier(n_estimators=100, criterion='gini', max_depth=20, random_state=42, n_jobs=-1)
+clf = KNeighborsClassifier(n_neighbors=5)
 clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
