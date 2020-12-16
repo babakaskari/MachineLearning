@@ -162,7 +162,7 @@ def unlabeled():
     df = pd.DataFrame(x_test, columns=['Date', 'ID', 'value_Lvl', 'value_Spr', 'Leak Found'])
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
-    # plt.show()
+    plt.show()
     # #####################################################
     x_test = x_test.drop(["Leak Found"], axis=1)
     print("x_test shape is equal to :  ", x_test.shape)
