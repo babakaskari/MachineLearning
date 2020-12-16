@@ -65,7 +65,7 @@ def just_labeled():
     print("Number of null values in dataset :\n", dataset.isna().sum())
     # ##################################################### SPLIT THE DATASET
     x_labeled_data = dataset.loc[dataset['Leak Found'].notna()]
-    y_labeled_date = x_labeled_data["Leak Found"]
+    y_labeled_data = x_labeled_data["Leak Found"]
     x_labeled_data = x_labeled_data.drop(["Leak Found"], axis=1)
     # ############################################## standard scaler
     scaler = StandardScaler()
@@ -79,7 +79,7 @@ def just_labeled():
     x_unlabeled_data = dataset.loc[dataset['Leak Found'].isna()]
     y_unlabeled_data = x_unlabeled_data.drop(["Leak Found"], axis=1)
     x_train, x_test, y_train, y_test = train_test_split(x_labeled_data,
-                                                        y_labeled_date,
+                                                        y_labeled_data,
                                                         test_size=0.2,
                                                         random_state=42)
     x_train, x_cv, y_train, y_cv = train_test_split(x_train,
@@ -240,6 +240,7 @@ def labeled():
     df8["Leak Found"] = df8["Leak Found"].fillna(0)
 
     dataset = df8
+
     indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
     # Delete these row indexes from dataFrame
     dataset.drop(indexNames, index=None, inplace=True)
@@ -259,6 +260,9 @@ def labeled():
     dataset = dataset.drop_duplicates()
     print(" dataset description : ", dataset.describe())
     # ##############################################
+    dataset = dataset.drop(['index'], axis=1)
+    print(("df8 shape : ", df8.shape))
+
 
     # corrolation matrix
     print(dataset.columns.values)
@@ -266,17 +270,23 @@ def labeled():
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
     # plt.show()
-    tempdata = dataset
-    dataset = dataset.loc[:80]
+
+
+    # dataset = dataset.loc[:80]
     dataset = dataset.sample(frac=1)
-    print("dataset shape: ", dataset.shape)
+
     print("Number of null values in dataset : \n", dataset.isna().sum())
     # print("dataset : ", dataset.shape[0])
     # dataset2 = dataset.drop(["Leak Found"], axis=1)
-    dataset2 = dataset
-    print("dataset features : ", dataset.columns)
-    leak_found = dataset2["Leak Found"]
+    # dataset2 = dataset
+   # print(("dataset shape : ", dataset.shape))
+    # print("dataset2  : ", dataset2.columns)
+    # print("dataset2 shape : ", dataset2.shape)
+    # leak_found = dataset2["Leak Found"]
+    leak_found = dataset.drop(['ID', 'Date', 'value_Lvl', 'value_Spr'], axis=1)
     dataset2 = dataset.drop(['Leak Found'], axis=1)
+    print("leak found shape : ", leak_found.shape)
+    print("dataset2 shape : ", dataset2.shape)
     # ########################################## APPLYING GUASSRANK NORMALIZATION
 
     x_cols = dataset2.columns[:]
@@ -296,7 +306,6 @@ def labeled():
     print("x_train description : ", x_train.describe())
     """
     # ##############################################
-    print("dataset2 features : ", dataset2.columns)
 
     x_train, x_test, y_train, y_test = train_test_split(dataset2,
                                                         leak_found,
@@ -307,6 +316,13 @@ def labeled():
                                                     y_train,
                                                     stratify=y_train,
                                                     test_size=0.2)
+
+   # print("x_train : ", x_train)
+    # print("x_test : ", x_test)
+   # print("x_train shape", x_train.shape)
+   # print("x_test shape", x_test.shape)
+   # print("x_train : ", x_train.columns)
+   # print("x_test : ", x_test.colums)
 
     data_dict = {
 
