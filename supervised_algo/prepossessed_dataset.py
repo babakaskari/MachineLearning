@@ -599,8 +599,7 @@ def evaluate_preds(model, x_train, y_train,  x_true, y_true, x_cv, y_cv):
     plt.title("Receiver Operating Characteristic (ROC) Curve")
     plt.legend()
     plt.show()
-    metric_dict.plot.bar(rot=0)
-    plt.show()
+    
 
 
 
