@@ -23,6 +23,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn.model_selection import cross_validate
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
 import prepossessed_dataset
 import evaluator
 from sklearn.metrics import roc_curve
@@ -40,8 +41,6 @@ y_test = dataset["y_test"]
 x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
-
-base_cls = RandomForestClassifier()
-clf = BaggingClassifier(base_estimator=base_cls, n_estimators=10, random_state=0)
+clf = BaggingClassifier( n_estimators=10, random_state=0)
 clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
