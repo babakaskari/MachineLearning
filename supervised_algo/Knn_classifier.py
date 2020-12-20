@@ -40,3 +40,5 @@ y_cv = dataset["y_cv"]
 clf = KNeighborsClassifier(n_neighbors=5)
 clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
+
+

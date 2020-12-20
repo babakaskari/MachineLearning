@@ -65,8 +65,10 @@ def just_labeled():
     print("Number of null values in dataset :\n", dataset.isna().sum())
     # ##################################################### SPLIT THE DATASET
     x_labeled_data = dataset.loc[dataset['Leak Found'].notna()]
+
     y_labeled_data = x_labeled_data["Leak Found"]
     x_labeled_data = x_labeled_data.drop(["Leak Found"], axis=1)
+
     # ############################################## standard scaler
     scaler = StandardScaler()
     data_scaled = scaler.fit_transform(x_labeled_data)
@@ -78,6 +80,10 @@ def just_labeled():
     # x_train = x_train.sample(frac=1)
     x_unlabeled_data = dataset.loc[dataset['Leak Found'].isna()]
     y_unlabeled_data = x_unlabeled_data.drop(["Leak Found"], axis=1)
+    print("ID in just_labeld dtaaset : ", x_labeled_data["ID"].nunique())
+    print("ID in just_labeld dtaaset : ", x_labeled_data["ID"].unique())
+    print("number of occurence : ", x_labeled_data['ID'].value_counts())
+
     x_train, x_test, y_train, y_test = train_test_split(x_labeled_data,
                                                         y_labeled_data,
                                                         test_size=0.2,
@@ -124,6 +130,7 @@ def unlabeled():
     # df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
     # df8["Leak Found"] = df8["Leak Found"].fillna(-1)
     dataset = df8
+
     # ##################################################### Delete these row indexes from dataFrame
     indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
     dataset.drop(indexNames, index=None, inplace=True)
@@ -270,9 +277,17 @@ def labeled():
     dataset = dataset.sample(frac=1)
 
     print("Number of null values in dataset : \n", dataset.isna().sum())
+    print("datase shape before duplicate : ", dataset.shape)
 
     leak_found = dataset.drop(['ID', 'Date', 'value_Lvl', 'value_Spr'], axis=1)
     dataset2 = dataset.drop(['Leak Found'], axis=1)
+    dataset5 = dataset2.drop_duplicates()
+
+    print("datase shape after duplicate : ", dataset5.shape)
+    print("ID in whole dtaaset : ", dataset2["ID"].nunique())
+    print("ID in just_labeld dtaaset : ", dataset2["ID"].unique())
+    print("number of occurence : ", dataset2['ID'].value_counts())
+
     # print("leak found shape : ", leak_found.shape)
     # print("dataset2 shape : ", dataset2.shape)
     # ########################################## APPLYING GUASSRANK NORMALIZATION
