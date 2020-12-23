@@ -592,11 +592,10 @@ def semi_super_no_date():
     id_ohe = pd.DataFrame(id_ohe)
     # print("id_ohe : ", id_ohe)
     dataset = pd.concat([id_ohe, dataset], axis=1)
-    # print("dataset  = ", dataset)
+    print("dataset  = \n ", dataset)
     # ############################################################ Convert Date categorical to numerical
 
-    dataset = dataset.drop_duplicates()
-    print(" dataset description : ", dataset.describe())
+    print(" dataset description : \n ", dataset.describe())
     # ##############################################
 
     # corrolation matrix
