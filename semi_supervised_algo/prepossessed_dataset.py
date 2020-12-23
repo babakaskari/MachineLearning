@@ -553,7 +553,7 @@ def semi_super():
     return data_dict
 
 
-def semi_super_no_date():
+def semi_super_no_date():                      # probability is set to 98%
     df = pd.read_csv("../dataset/Acoustic Logger Data.csv")
     df1 = df.loc[df["LvlSpr"] == "Lvl"]
     df3 = df.loc[df["LvlSpr"] == "Spr"]
