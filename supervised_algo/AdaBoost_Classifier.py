@@ -39,7 +39,6 @@ y_test = dataset["y_test"]
 x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
-
-clf = AdaBoostClassifier(n_estimators=100, random_state=0)
+clf = AdaBoostClassifier(n_estimators=100, random_state=0, n_classes_=2)
 clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)

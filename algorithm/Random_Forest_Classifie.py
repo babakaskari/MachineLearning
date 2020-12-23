@@ -48,6 +48,7 @@ df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
 df8["Leak Alarm"] = df8["Leak Alarm"].fillna(-1)
 df8["Leak Found"] = df8["Leak Found"].fillna(-1)
 dataset = df8
+print("number of ID : ", df8["ID"].nunique())
 indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
 # Delete these row indexes from dataFrame
 dataset.drop(indexNames, inplace=True)
@@ -58,6 +59,7 @@ dataset = dataset1.drop(['Leak Alarm'], axis=1)
 
 dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
 print(dataset)
+
 print(dataset.isna().sum())
 # corrolation matrix
 print("Features : ")
@@ -68,6 +70,7 @@ sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
 plt.show()
 leak_found = dataset["Leak Found"]
 dataset3 = dataset.drop(['Leak Found'], axis=1)
+
 x_train, x_test, y_train, y_test = train_test_split(dataset3, leak_found, stratify=leak_found, test_size=0.2)
 x_train, x_cv, y_train, y_cv = train_test_split(x_train, y_train, stratify=y_train, test_size=0.2)
 print('Number of data points in train data:', x_train.shape[0])
