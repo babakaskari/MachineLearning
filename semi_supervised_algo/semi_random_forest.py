@@ -15,9 +15,10 @@ from gaussrank import *
 from sklearn.metrics import plot_confusion_matrix
 from xgboost import XGBClassifier
 import prepossessed_dataset
+import evaluator
 
 pd.set_option('mode.chained_assignment', None)
-dataset = prepossessed_dataset.semi_super()
+dataset = prepossessed_dataset.semi_super_no_date()
 x_unlabeled = dataset["x_unlabeled"]
 x_train = dataset["x_train"]
 y_train = dataset["y_train"]
@@ -114,6 +115,16 @@ while len(high_prob) > 0 and len(x_unlabeled) > 0:
     # Update iteration counter
     iterations += 1
     print(f"Test f1: {test_f1s}")
+
+x_train, x_test, y_train, y_test = train_test_split(x_train,
+                                                    y_train,
+                                                    test_size=0.2,
+                                                    random_state=42)
+
+clf = RandomForestClassifier()
+clf.fit(x_train, y_train)
+preds = clf.predict(x_test)
+evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test)
 
 
 

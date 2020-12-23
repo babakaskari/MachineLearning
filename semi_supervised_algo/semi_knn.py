@@ -16,9 +16,10 @@ from gaussrank import *
 from sklearn.metrics import plot_confusion_matrix
 from xgboost import XGBClassifier
 import prepossessed_dataset
+import evaluator
 
 pd.set_option('mode.chained_assignment', None)
-dataset = prepossessed_dataset.semi_super()
+dataset = prepossessed_dataset.semi_super_no_date()
 x_unlabeled = dataset["x_unlabeled"]
 x_train = dataset["x_train"]
 y_train = dataset["y_train"]
@@ -93,8 +94,8 @@ while len(high_prob) > 0 and len(x_unlabeled) > 0:
     df_pred_prob['prob_1'] = prob_1
     df_pred_prob.index = x_unlabeled.index
     # Separate predictions with > 99% probability
-    high_prob = pd.concat([df_pred_prob.loc[df_pred_prob['prob_0'] > 0.99],
-                           df_pred_prob.loc[df_pred_prob['prob_1'] > 0.99]],
+    high_prob = pd.concat([df_pred_prob.loc[df_pred_prob['prob_0'] > 0.98],
+                           df_pred_prob.loc[df_pred_prob['prob_1'] > 0.98]],
                           axis=0)
     # print(high_prob)
     print(f"{len(high_prob)} high-probability predictions added to training data.")
@@ -116,6 +117,14 @@ while len(high_prob) > 0 and len(x_unlabeled) > 0:
     iterations += 1
     print(f"Test f1: {test_f1s}")
 
+x_train, x_test, y_train, y_test = train_test_split(x_train,
+                                                    y_train,
+                                                    test_size=0.2,
+                                                    random_state=42)
 
+clf = KNeighborsClassifier(n_neighbors=5)
+clf.fit(x_train, y_train)
+preds = clf.predict(x_test)
+evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test)
 
 
