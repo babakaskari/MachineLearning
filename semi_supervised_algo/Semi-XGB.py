@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 from gaussrank import *
+import evaluator
 from sklearn.metrics import plot_confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
@@ -121,7 +122,7 @@ while len(high_prob) > 0 and len(x_unlabeled) > 0:
     # Add pseudo-labeled data to training data
     x_train = pd.concat([x_train, x_unlabeled.loc[high_prob.index]], axis=0)
     high_prob = high_prob.drop(columns=['prob_0', 'prob_1'])
-    print(high_prob)
+    # print(high_prob)
 
     y_train = pd.concat([y_train, high_prob])
 
@@ -133,6 +134,15 @@ while len(high_prob) > 0 and len(x_unlabeled) > 0:
     iterations += 1
     print(f"Test f1: {test_f1s}")
 
+x_train, x_test, y_train, y_test = train_test_split(x_train,
+                                                    y_train,
+                                                    test_size=0.2,
+                                                    random_state=42)
+
+clf = XGBClassifier()
+clf.fit(x_train, y_train)
+preds = clf.predict(x_test)
+evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test)
 
 
 
