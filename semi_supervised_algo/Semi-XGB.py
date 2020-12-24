@@ -32,7 +32,7 @@ from xgboost import XGBClassifier
 import prepossessed_dataset
 
 pd.set_option('mode.chained_assignment', None)
-dataset = prepossessed_dataset.semi_super()
+dataset = prepossessed_dataset.semi_super_no_date()
 x_unlabeled = dataset["x_unlabeled"]
 x_train = dataset["x_train"]
 y_train = dataset["y_train"]
