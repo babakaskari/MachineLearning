@@ -584,6 +584,7 @@ def semi_super_no_date():
     dataset["Leak Found"].replace(["Y", "N"], [1, 0], inplace=True)
     # dataset["Leak Alarm"].replace(["Y", "N"], [1, 0], inplace=True)
     dataset1 = dataset
+
     id = dataset[["ID"]]
     dataset = dataset1.drop(['Leak Alarm', 'index', "Date", "ID"], axis=1)
 
@@ -592,19 +593,18 @@ def semi_super_no_date():
     id_ohe = pd.DataFrame(id_ohe)
     # print("id_ohe : ", id_ohe)
     dataset = pd.concat([id_ohe, dataset], axis=1)
+
     # print("dataset  = ", dataset)
     # ############################################################ Convert Date categorical to numerical
-
-    dataset = dataset.drop_duplicates()
     print(" dataset description : ", dataset.describe())
     # ##############################################
 
     # corrolation matrix
     # print(dataset.columns.values)
-    df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
+    df = pd.DataFrame(dataset, columns=['value_Lvl', 'value_Spr'])
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
-    # plt.show()
+    plt.show()
 
     dataset = dataset.sample(frac=1)
     # print("dataset shape: ", dataset.shape)
@@ -615,6 +615,7 @@ def semi_super_no_date():
     # print("dataset features : ", dataset.columns)
     # leak_found = dataset2["Leak Found"]
     # dataset2 = dataset.drop(['Leak Found'], axis=1)
+
 
     # ########################################## APPLYING GUASSRANK NORMALIZATION
     """
@@ -640,6 +641,7 @@ def semi_super_no_date():
     # print(dataset2)
     labeled_df = dataset2.loc[dataset2['Leak Found'].notnull()]
     unlabeled_df = dataset2.loc[dataset2['Leak Found'].isnull()]
+
     shuffled_labeled_df = labeled_df.sample(frac=1).reset_index(drop=True)
     labels = shuffled_labeled_df[["Leak Found"]]
     # df8.to_csv('OHE.csv')
