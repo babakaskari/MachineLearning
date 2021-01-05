@@ -68,7 +68,7 @@ def just_labeled():
     data_scaled = scaler.fit_transform(x_labeled_data)
     x_train = pd.DataFrame(data_scaled)
     # print("x_train after normalization : ", x_train.head())
-    print("x_train description after normalization: ", x_labeled_data.describe())
+    print("x_train description after normalization: \n ", x_labeled_data.describe())
 
     # ############################################################
     # x_train = x_train.sample(frac=1)
@@ -202,7 +202,7 @@ def unlabeled():
     scaler = StandardScaler()
     data_scaled = scaler.fit_transform(x_train)
     x_train = pd.DataFrame(data_scaled)
-    print("x_train description : ", x_train.describe())
+    print("x_train description : \n ", x_train.describe())
     ########################################## TO REPRESENT OUR DATASET, ALL COLUMNS IN MATRIX FORM
     x_train = pd.DataFrame(x_train)
 
@@ -598,7 +598,7 @@ def semi_super_no_date():                      # probability is set to 98%
 
     # print("dataset  = ", dataset)
     # ############################################################ Convert Date categorical to numerical
-    print(" dataset description : ", dataset.describe())
+    print(" dataset description :\n ", dataset.describe())
     # ##############################################
 
     # corrolation matrix
@@ -695,17 +695,17 @@ def semi_super_no_date():                      # probability is set to 98%
 def just_label_splitter(y):
 
     dataset = just_labeled()
-    print("dataset : ", dataset)
+    print("dataset :\n  ", dataset)
     x_train, x_test, y_train, y_test = train_test_split(dataset["x_dataset"],
                                                         dataset["y_dataset"],
                                                         test_size=y,
                                                         random_state=42
                                                         )
     data_dict = {
-        "labeled_x_train": x_train,
-        "labeled_y_train": y_train,
-        "labeled_x_test": x_test,
-        "labeled_y_test": y_test,
+        "labeled_x_train \n": x_train,
+        "labeled_y_train\n ": y_train,
+        "labeled_x_test\n ": x_test,
+        "labeled_y_test\n ": y_test,
     }
     return data_dict
 
@@ -713,17 +713,17 @@ def just_label_splitter(y):
 def unlabeled_splitter(y):
 
     dataset = unlabeled()
-    print("dataset : ", dataset)
+    print("dataset : \n ", dataset)
     x_train, x_test, y_train, y_test = train_test_split(dataset["x_dataset"],
                                                         dataset["y_dataset"],
                                                         test_size=y,
                                                         random_state=42
                                                         )
     data_dict = {
-        "unlabeled_x_train": x_train,
-        "unlabeled_y_train": y_train,
-        "unlabeled_x_test": x_test,
-        "unlabeled_y_test": y_test,
+        "unlabeled_x_train\n": x_train,
+        "unlabeled_y_train\n": y_train,
+        "unlabeled_x_test\n": x_test,
+        "unlabeled_y_test\n": y_test,
     }
     return data_dict
 

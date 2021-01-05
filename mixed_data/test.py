@@ -18,4 +18,4 @@ sns.set()
 
 dataset = prepossessed_dataset.just_label_splitter(0.2)
 
-print("new dataset  :   ", dataset)
+print("new dataset  :  \n ", dataset)
