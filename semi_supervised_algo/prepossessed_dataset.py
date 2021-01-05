@@ -467,7 +467,7 @@ def semi_super():
     df = pd.DataFrame(dataset, columns=['Date', 'ID', 'value_Lvl', 'value_Spr'])
     corrMatrix = df.corr()
     sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
-    # plt.show()
+    plt.show()
 
     dataset = dataset.sample(frac=1)
     print("dataset shape: ", dataset.shape)
@@ -491,12 +491,12 @@ def semi_super():
     print("GaussRankScaler dataset description :\n ", dataset2.describe())
     """
     # ############################################## standard scaler
-    """
-    scaler = StandardScaler()
-    data_scaled = scaler.fit_transform(x_train)
-    x_train = pd.DataFrame(data_scaled)
-    print("x_train description : ", x_train.describe())
-    """
+
+    # scaler = StandardScaler()
+    # data_scaled = scaler.fit_transform(dataset2)
+    # dataset2 = pd.DataFrame(data_scaled)
+    # print("dataset2 description : ", dataset2.describe())
+
     # ##############################################
     # print("dataset2 features : ", dataset2.columns)
 
@@ -514,23 +514,23 @@ def semi_super():
     x_unlabeled.reset_index(drop=True, inplace=True)
     # print("X_unlabeld \n", X_unlabeled)
     # =======================labeled data
-    x_cols = x_labeled.columns[:]
-    x = x_labeled[x_cols]
-
-    s = GaussRankScaler()
-    x_ = s.fit_transform(x)
-    assert x_.shape == x.shape
-    x_labeled[x_cols] = x_
-
-    # ===================== unlabeled data
-
-    x_cols = x_unlabeled.columns[:]
-    x = x_unlabeled[x_cols]
-
-    s = GaussRankScaler()
-    x_ = s.fit_transform(x)
-    assert x_.shape == x.shape
-    x_unlabeled[x_cols] = x_
+    # x_cols = x_labeled.columns[:]
+    # x = x_labeled[x_cols]
+    #
+    # s = GaussRankScaler()
+    # x_ = s.fit_transform(x)
+    # assert x_.shape == x.shape
+    # x_labeled[x_cols] = x_
+    #
+    # # ===================== unlabeled data
+    #
+    # x_cols = x_unlabeled.columns[:]
+    # x = x_unlabeled[x_cols]
+    #
+    # s = GaussRankScaler()
+    # x_ = s.fit_transform(x)
+    # assert x_.shape == x.shape
+    # x_unlabeled[x_cols] = x_
 
     # #################################################
     test_ind = round(len(x_labeled) * 0.70)
@@ -629,12 +629,12 @@ def semi_super_no_date():                      # probability is set to 98%
     print("GaussRankScaler dataset description :\n ", dataset2.describe())
     """
     # ############################################## standard scaler
-    """
+
     scaler = StandardScaler()
-    data_scaled = scaler.fit_transform(x_train)
-    x_train = pd.DataFrame(data_scaled)
-    print("x_train description : ", x_train.describe())
-    """
+    data_scaled = scaler.fit_transform(dataset2)
+    dataset2 = pd.DataFrame(data_scaled)
+    print("x_train description : ", dataset2.describe())
+
     # ##############################################
     # print("dataset2 features : ", dataset2.columns)
 
@@ -650,28 +650,28 @@ def semi_super_no_date():                      # probability is set to 98%
     x_unlabeled = unlabeled_df.drop(labels=['Leak Found'], axis=1)  # Unlabled
     x_unlabeled.reset_index(drop=True, inplace=True)
     # print("X_unlabeld \n", X_unlabeled)
-    # =======================labeled data
-    x_cols = x_labeled.columns[:]
-    x = x_labeled[x_cols]
-
-    s = GaussRankScaler()
-    x_ = s.fit_transform(x)
-    assert x_.shape == x.shape
-    x_labeled[x_cols] = x_
-
-    # ===================== unlabeled data
-
-    x_cols = x_unlabeled.columns[:]
-    x = x_unlabeled[x_cols]
-
-    s = GaussRankScaler()
-    x_ = s.fit_transform(x)
-    assert x_.shape == x.shape
-    x_unlabeled[x_cols] = x_
+    # # =======================labeled data
+    # x_cols = x_labeled.columns[:]
+    # x = x_labeled[x_cols]
+    #
+    # s = GaussRankScaler()
+    # x_ = s.fit_transform(x)
+    # assert x_.shape == x.shape
+    # x_labeled[x_cols] = x_
+    #
+    # # ===================== unlabeled data
+    #
+    # x_cols = x_unlabeled.columns[:]
+    # x = x_unlabeled[x_cols]
+    #
+    # s = GaussRankScaler()
+    # x_ = s.fit_transform(x)
+    # assert x_.shape == x.shape
+    # x_unlabeled[x_cols] = x_
 
     # #################################################
-    test_ind = round(len(x_labeled) * 0.70)
-    train_ind = test_ind + round(len(x_labeled) * 0.30)
+    test_ind = round(len(x_labeled) * 0.75)
+    train_ind = test_ind + round(len(x_labeled) * 0.25)
     x_test = x_labeled.iloc[:test_ind]
     x_train = x_labeled.iloc[test_ind:train_ind]
     y_test = labels.iloc[:test_ind]
