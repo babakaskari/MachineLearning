@@ -117,6 +117,7 @@ while len(high_prob) > 0 and len(x_unlabeled) > 0:
     iterations += 1
     print(f"Test f1: {test_f1s}")
 
+
 x_train, x_test, y_train, y_test = train_test_split(x_train,
                                                     y_train,
                                                     test_size=0.2,
