@@ -209,6 +209,7 @@ def unlabeled():
     data_dict = {
         "x_train": x_train,
         "x_test": x_test,
+        # "dataset": dataset,
     }
 
     return data_dict
@@ -692,7 +693,7 @@ def semi_super_no_date():                      # probability is set to 98%
     return data_dict
 
 
-def just_label_splitter(y):
+def just_labeled_splitter(y):
 
     dataset = just_labeled()
     print("dataset :\n  ", dataset)
@@ -702,10 +703,10 @@ def just_label_splitter(y):
                                                         random_state=42
                                                         )
     data_dict = {
-        "labeled_x_train \n": x_train,
-        "labeled_y_train\n ": y_train,
-        "labeled_x_test\n ": x_test,
-        "labeled_y_test\n ": y_test,
+        "labeled_x_train": x_train,
+        "labeled_y_train": y_train,
+        "labeled_x_test": x_test,
+        "labeled_y_test": y_test,
     }
     return data_dict
 
@@ -713,17 +714,13 @@ def just_label_splitter(y):
 def unlabeled_splitter(y):
 
     dataset = unlabeled()
-    print("dataset : \n ", dataset)
-    x_train, x_test, y_train, y_test = train_test_split(dataset["x_dataset"],
-                                                        dataset["y_dataset"],
-                                                        test_size=y,
-                                                        random_state=42
-                                                        )
+    print("dataset : \n ", dataset["x_train"])
+    x_train, x_test = train_test_split(dataset["x_train"], test_size=y, random_state=42)
     data_dict = {
-        "unlabeled_x_train\n": x_train,
-        "unlabeled_y_train\n": y_train,
-        "unlabeled_x_test\n": x_test,
-        "unlabeled_y_test\n": y_test,
+        "unlabeled_x_train": x_train,
+
+        "unlabeled_x_test": x_test,
+
     }
     return data_dict
 

@@ -16,6 +16,10 @@ import prepossessed_dataset
 import seaborn as sns
 sns.set()
 
-dataset = prepossessed_dataset.just_label_splitter(0.2)
+plt.close("all")
+dataset = prepossessed_dataset.unlabeled_splitter(0.2)
+print("new dataset  :  \n ", dataset["unlabeled_x_train"])
+print("new dataset shape :  \n ", dataset["unlabeled_x_train"].shape)
+print("new dataset  :  \n ", dataset["unlabeled_x_test"])
+print("new dataset shape :  \n ", dataset["unlabeled_x_test"].shape)
 
-print("new dataset  :  \n ", dataset)
