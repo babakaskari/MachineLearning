@@ -33,8 +33,8 @@ import seaborn as sns
 import xgboost as xgb
 from sklearn import metrics
 from xgboost import XGBClassifier
-sys.path.insert(0, "D:\\Graphviz\\bin")
-sys.path.insert(0, "D:\\Graphviz")
+sys.path.insert(0, "C:\\Graphviz\\bin")
+sys.path.insert(0, "C:\\Graphviz")
 sns.set()
 
 dataset = prepossessed_dataset.labeled()
