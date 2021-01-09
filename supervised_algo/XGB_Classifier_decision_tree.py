@@ -45,30 +45,17 @@ y_test = dataset["y_test"]
 x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
-clf = XGBClassifier()
-# clf = xgb.sklearn.XGBClassifier(nthread=-1, seed=42)
+# clf = XGBClassifier()
+clf = xgb.sklearn.XGBClassifier(nthread=-1, n_estimators=50, seed=42)
 clf.fit(x_train, y_train)
 xgb_pred = clf.predict(x_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)
 plt.figure(figsize=(20, 15))
 xgb.plot_importance(clf, ax=plt.gca())
 plt.show()
-plt.figure(figsize=(20,15))
+plt.figure(figsize=(20, 15))
 xgb.plot_tree(clf, ax=plt.gca())
 plt.show()
 print("Number of boosting trees: {}".format(clf.n_estimators))
 print("Max depth of trees: {}".format(clf.max_depth))
 print("Objective function: {}".format(clf.objective))
-file_name = "xgb.pkl"
-# save
-pickle.dump(clf, open(file_name, "wb"))
-pickle_file = open("file_name", "rb")
-objects = []
-while True:
-    try:
-        objects.append(pickle.load(pickle_file))
-    except EOFError:
-        break
-pickle_file.close()
-
-print(objects)
