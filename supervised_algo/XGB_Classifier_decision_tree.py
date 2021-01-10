@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from xgboost import plot_tree
 import pickle
 import time
 from matplotlib import dates as mpl_dates
@@ -59,3 +60,5 @@ plt.show()
 print("Number of boosting trees: {}".format(clf.n_estimators))
 print("Max depth of trees: {}".format(clf.max_depth))
 print("Objective function: {}".format(clf.objective))
+plot_tree(clf, num_trees=10, rankdir='LR')
+plt.show()
