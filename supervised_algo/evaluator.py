@@ -58,7 +58,7 @@ def evaluate_preds(model, x_train, y_train,  x_true, y_true, x_cv, y_cv):
     print("fpr : ", fpr)
     print("roc_auc_score : ", roc_auc_score(y_true, y_probs_positive))
     plt.plot(fpr, tpr, color="orange", label="ROC")
-    plt.plot([0, 1], [0, 1], color="darkblue", linestyle="--", label="Gussing")
+    plt.plot([0, 1], [0, 1], color="darkblue", linestyle="--", label="Guessing")
     plt.xlabel("False positive rate (fpr)")
     plt.ylabel("True positive rate (tpr)")
     plt.title("Receiver Operating Characteristic (ROC) Curve")
