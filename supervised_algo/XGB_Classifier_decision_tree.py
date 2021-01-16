@@ -38,7 +38,7 @@ sys.path.insert(0, "C:\\Graphviz\\bin")
 sys.path.insert(0, "C:\\Graphviz")
 sns.set()
 
-dataset = prepossessed_dataset.labeled()
+dataset = prepossessed_dataset.labeled_two_features()
 x_train = dataset["x_train"]
 y_train = dataset["y_train"]
 x_test = dataset["x_test"]
@@ -60,5 +60,5 @@ plt.show()
 print("Number of boosting trees: {}".format(clf.n_estimators))
 print("Max depth of trees: {}".format(clf.max_depth))
 print("Objective function: {}".format(clf.objective))
-plot_tree(clf, num_trees=10, rankdir='LR')
+plot_tree(clf, num_trees=10)
 plt.show()

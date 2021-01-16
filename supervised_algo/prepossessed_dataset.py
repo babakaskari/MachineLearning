@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
+from matplotlib import pyplot
 from sklearn.semi_supervised import LabelPropagation
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 import sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -568,4 +569,108 @@ def semi_super():
 
     return data_dict
 
+def labeled_two_features():
+    df = pd.read_csv("../dataset/Acoustic Logger Data.csv")
+    ###################################################################### FIRST FILE PREPROCESSING
+    df1 = df.loc[df["LvlSpr"] == "Lvl"]
+    df3 = df.loc[df["LvlSpr"] == "Spr"]
+    df2 = pd.melt(df1, id_vars=['LvlSpr', 'ID'], value_vars=df.loc[:0, '02-May':].columns.values.tolist(),
+                  var_name='Date')
+    df4 = pd.melt(df3, id_vars=['LvlSpr', 'ID'], value_vars=df.loc[:0, '02-May':].columns.values.tolist(),
+                  var_name='Date')
+    df5 = pd.merge(df2, df4, on=['ID', 'Date'], suffixes=("_Lvl", "_Spr"))
+    df6 = df5.drop(['LvlSpr_Lvl', 'LvlSpr_Spr'], axis=1).dropna()
+    df6['Date'] = pd.to_datetime(df6['Date'], format='%d-%b')
+    df6['Date'] = df6['Date'].dt.strftime('%d-%m')
+    ###################################################################### SECOND FILE PREPROCESSING
+    df7 = pd.read_csv("../dataset/Leak Alarm Results.csv")
+    df7['Date Visited'] = pd.to_datetime(df7['Date Visited'], format='%d/%m/%Y')
+    df7['Date Visited'] = df7['Date Visited'].dt.strftime('%d-%m')
+    df7 = df7.rename(columns={'Date Visited': 'Date'})
 
+    df8 = pd.merge(df6, df7, on=['ID', 'Date'], how='left')
+    df8 = df8.sort_values(['Leak Alarm', 'Leak Found']).reset_index(drop=True)
+    df8["Leak Found"] = df8["Leak Found"].fillna(0)
+    dataset = df8
+
+    ###################################################################### DROPPING THE N-PRV AND INDEX RESET
+    indexNames = dataset[dataset['Leak Found'] == 'N-PRV'].index
+    dataset.drop(indexNames, index=None, inplace=True)
+    dataset.reset_index(inplace=True)
+    dataset = dataset.drop(['index'], axis=1)
+
+    ######################################################################
+    dataset["Leak Found"].replace(["Y", "N"], [1, 0], inplace=True)
+    dataset1 = dataset
+    dataset = dataset1.drop(['Leak Alarm'], axis=1)
+    print(' DATASET AFTER IGNORING N-PRV READY FOR PREPROCESSING: \n ', dataset)
+    # ############################################################ CONVERT DATE TO CATEGORICAL DATA
+    # dataset['Date'] = dataset['Date'].str.replace('\D', '').astype(int)
+    date_encoder = preprocessing.LabelEncoder()
+    date_encoder.fit(dataset['Date'])
+    dataset['Date'] = date_encoder.transform(dataset['Date'])
+    # print(dataset.to_string(max_rows=200))
+    dataset = dataset1.drop(['ID','Date'], axis=1)
+    # dataset = dataset.drop_duplicates()
+    print(" DATASET DESCRIPTION AFTER DROPPING DUPLICATES : \n", dataset.describe())
+    ############################################################## CORELATION MATRIX
+
+    df = pd.DataFrame(dataset, columns=['value_Lvl', 'value_Spr'])
+    corrMatrix = df.corr()
+    sns.heatmap(corrMatrix, annot=True, cmap="YlGnBu")
+    plt.show()
+
+    # dataset = dataset.sample(frac=1)
+
+    leak_found = dataset.drop(['value_Lvl', 'value_Spr','Leak Alarm'], axis=1)
+    dataset2 = dataset.drop(['Leak Found','Leak Alarm'], axis=1)
+    print("NUMBER OF NULL VALUES IN DATASET : \n", dataset2.isna().sum())
+    print("DATASET BEFORE NORMALIZATION : \n",dataset2)
+
+    ############################################################## APPLYING GUASSRANK NORMALIZATION
+
+    # x_cols = dataset2.columns[:]
+    # x = dataset2[x_cols]
+    # s = GaussRankScaler()
+    # x_ = s.fit_transform(x)
+    # assert x_.shape == x.shape
+    # dataset2[x_cols] = x_
+    # print(" DATASET DESCRIPTION AFTER GAUSSRANK SCALER :\n ", dataset2.describe())
+
+    # ############################################## standard scaler
+    dataset = dataset2
+    # trans = MinMaxScaler()
+    # data_scaled = trans.fit_transform(dataset)
+    scaler = StandardScaler()
+    data_scaled = scaler.fit_transform(dataset)
+    dataset = pd.DataFrame(data_scaled,columns=['value_Lvl','value_Spr'])
+    print("DATASET DESCRIPTION AFTER SCALER NORMALIZATION : \n ", dataset.describe())
+    print("DATASET AFTER NORMALIZATION : \n", dataset)
+    dataset.hist()
+    pyplot.show()
+
+    # ##############################################
+
+    x_train, x_test, y_train, y_test = train_test_split(dataset,
+                                                        leak_found,
+                                                        test_size=0.2,
+                                                        random_state=42)
+
+    x_train, x_cv, y_train, y_cv = train_test_split(x_train,
+                                                    y_train,
+                                                    stratify=y_train,
+                                                    test_size=0.2)
+
+    data_dict = {
+
+        "x_train": x_train,
+        "y_train": y_train,
+        "x_test": x_test,
+        "y_test": y_test,
+        "x_cv": x_cv,
+        "y_cv": y_cv,
+
+
+    }
+
+    return data_dict
