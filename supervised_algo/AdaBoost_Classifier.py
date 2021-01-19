@@ -31,7 +31,7 @@ from xgboost import XGBClassifier
 
 sns.set()
 
-dataset = prepossessed_dataset.labeled()
+dataset = prepossessed_dataset.labeled_two_features()
 x_train = dataset["x_train"]
 y_train = dataset["y_train"]
 x_test = dataset["x_test"]
@@ -39,6 +39,6 @@ y_test = dataset["y_test"]
 x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
-clf = AdaBoostClassifier(n_estimators=100, random_state=0, n_classes_=2)
+clf = AdaBoostClassifier(n_estimators=100, random_state=0)
 clf.fit(x_train, y_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)

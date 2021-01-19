@@ -33,7 +33,7 @@ from xgboost import XGBClassifier
 
 sns.set()
 
-dataset = prepossessed_dataset.labeled()
+dataset = prepossessed_dataset.labeled_two_features()
 x_train = dataset["x_train"]
 y_train = dataset["y_train"]
 x_test = dataset["x_test"]

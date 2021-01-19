@@ -88,6 +88,7 @@ print("dataset features :  ", dataset.columns)
 # x_centroid = np.array(x_test.iloc[[16, 17], ])
 dummy_data = dataset.drop(['Leak Found'], axis=1)
 print("Description  : \n ", dummy_data.describe())
+# print('Whats our X train:\n ',x_train)
 # ############################################# TO TAKE THE SELECTED SAMPLE FOR OUR XTRAIN
 # dummy_data = dummy_data.sample(frac=1)
 # x_dummy = dummy_data[:54]
