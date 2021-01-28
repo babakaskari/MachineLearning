@@ -12,7 +12,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
-from sklearn.metrics import plot_confusion_matrix
+# from sklearn.metrics import plot_confusion_matrix
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from gaussrank import *
@@ -629,25 +629,25 @@ def labeled_two_features():
 
     ############################################################## APPLYING GUASSRANK NORMALIZATION
 
-    # x_cols = dataset2.columns[:]
-    # x = dataset2[x_cols]
-    # s = GaussRankScaler()
-    # x_ = s.fit_transform(x)
-    # assert x_.shape == x.shape
-    # dataset2[x_cols] = x_
-    # print(" DATASET DESCRIPTION AFTER GAUSSRANK SCALER :\n ", dataset2.describe())
+    x_cols = dataset2.columns[:]
+    x = dataset2[x_cols]
+    s = GaussRankScaler()
+    x_ = s.fit_transform(x)
+    assert x_.shape == x.shape
+    dataset2[x_cols] = x_
+    print(" DATASET DESCRIPTION AFTER GAUSSRANK SCALER :\n ", dataset2.describe())
 
     # ############################################## standard scaler
     dataset = dataset2
     # trans = MinMaxScaler()
     # data_scaled = trans.fit_transform(dataset)
-    scaler = StandardScaler()
-    data_scaled = scaler.fit_transform(dataset)
-    dataset = pd.DataFrame(data_scaled,columns=['value_Lvl','value_Spr'])
-    print("DATASET DESCRIPTION AFTER SCALER NORMALIZATION : \n ", dataset.describe())
-    print("DATASET AFTER NORMALIZATION : \n", dataset)
-    dataset.hist()
-    pyplot.show()
+    # scaler = StandardScaler()
+    # data_scaled = scaler.fit_transform(dataset)
+    # dataset = pd.DataFrame(data_scaled,columns=['value_Lvl','value_Spr'])
+    # print("DATASET DESCRIPTION AFTER SCALER NORMALIZATION : \n ", dataset.describe())
+    # print("DATASET AFTER NORMALIZATION : \n", dataset)
+    # dataset.hist()
+    # pyplot.show()
 
     # ##############################################
 

@@ -40,7 +40,7 @@ y_test = dataset["y_test"]
 x_cv = dataset["x_cv"]
 y_cv = dataset["y_cv"]
 
-clf = XGBClassifier(max_depth=5)
+clf = XGBClassifier(max_depth=20, verbosity=2, nthread=-1, learning_rate=0.1)
 clf.fit(x_train, y_train)
 # xgb_pred = clf.predict(x_train)
 evaluator.evaluate_preds(clf, x_train, y_train, x_test, y_test, x_cv, y_cv)

@@ -11,7 +11,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
-from sklearn.metrics import plot_confusion_matrix
+# from sklearn.metrics import plot_confusion_matrix
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from gaussrank import *
@@ -44,9 +44,9 @@ def evaluate_preds(model, x_train, y_train,  x_true, y_true, x_cv, y_cv):
     pred_probality = model.predict_proba(x_true)
     # print("Predict probability : ", pred_probality)
     # cross_validation score
-    cross_validation_score = cross_val_score(model, x_train, y_train, cv=6)
+    cross_validation_score = cross_val_score(model, x_train, y_train, cv=100)
     print("Cross validation score : ", cross_validation_score)
-    cross_validation_predict = cross_val_predict(model, x_train, y_train, cv=6)
+    cross_validation_predict = cross_val_predict(model, x_train, y_train, cv=100)
     print("Cross validation predict : ", cross_validation_predict)
     cross_val_accuracy = np.mean(cross_validation_score) * 100
     print("cross validation accuracy : ", cross_val_accuracy)
