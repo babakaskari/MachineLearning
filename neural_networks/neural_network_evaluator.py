@@ -58,14 +58,15 @@ def prediction(autoencoder, x_test, y_test, threshold):
     print("Confusion Matrix : \n ", confusion_matrix_value)
     print("roc_auc_score : ", roc_auc_score(y_test, preds))
     fpr, tpr, thresholds = roc_curve(y_test, preds)
-    plt.plot(fpr, tpr, color="orange", label="ROC")
-    plt.plot([0, 1], [0, 1], color="darkblue", linestyle="--", label="Guessing")
+    # plt.plot(fpr, tpr, color="orange", label="ROC")
+    # plt.plot([0, 1], [0, 1], color="darkblue", linestyle="--", label="Guessing")
+    plt.plot(fpr, tpr, color="orange", label='AUC = %0.3f' % roc_auc_score(y_test, preds))
+    plt.plot([0, 1], [0, 1], color="darkblue", linestyle="--", label='Guessing')
     plt.xlabel("False positive rate (fpr)")
     plt.ylabel("True positive rate (tpr)")
     plt.title("Receiver Operating Characteristic (ROC) Curve")
     plt.legend()
     plt.show()
-
 
 
 
