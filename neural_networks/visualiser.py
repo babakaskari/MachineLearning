@@ -110,8 +110,10 @@ def wave_plotter(data, chart_title, dim):
 def auc_roc_curved(error_df):
     false_pos_rate, true_pos_rate, thresholds = roc_curve(error_df.True_class, error_df.Reconstruction_error)
     roc_auc = auc(false_pos_rate, true_pos_rate,)
-    plt.plot(false_pos_rate, true_pos_rate, linewidth=5, label='AUC = %0.3f'% roc_auc)
-    plt.plot([0, 1], [0, 1], linewidth=5)
+    # plt.plot(false_pos_rate, true_pos_rate, linewidth=5, label='AUC = %0.3f'% roc_auc)
+    # plt.plot([0, 1], [0, 1], linewidth=5)
+    plt.plot(false_pos_rate, true_pos_rate, color="orange", label='AUC = %0.3f' % roc_auc)
+    plt.plot([0, 1], [0, 1], color="darkblue", linestyle="--", label='Guessing')
     plt.xlim([-0.01, 1])
     plt.ylim([0, 1.01])
     plt.legend(loc='lower right')
