@@ -5,7 +5,7 @@
 /result/*
 /new_dataset/Etterspurte trender/*
 /new_dataset/MV137 Tosshullet/*
-/preproccesing/dataset/*
+/new_dataset/*
 /pickle/*
 *.pickle
 /garbage
