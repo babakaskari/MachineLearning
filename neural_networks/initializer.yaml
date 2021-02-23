@@ -1,0 +1,43 @@
+data_split:
+  test_size : 0.2
+  shuffle : True
+  stratify : y_dataset
+  random_state : 42
+
+fit:
+  compile:
+    optimizer : Adam
+    loss : mean_squared_error
+    metrics : [acc, mse, mae, mape]
+  epochs : 50
+  batch_size : 500
+  shuffle : True
+  validation_split : 0.1
+  verbose : 1
+
+fit_lstm:
+  compile:
+    optimizer : Adam
+    loss : mean_squared_error
+    metrics : [acc, mse, mae, mape]
+  epochs : 50
+  batch_size : 500
+  shuffle : False
+  validation_split : 0.1
+  verbose : 1
+
+lstm_data_split:
+   test_size: 0.2
+   shuffle: True
+   stratify: False
+   random_state: 42
+
+
+
+threshold: 0.13
+
+threshold_fixed: 0.05
+threshold_lstm: 0.05
+
+LABEL: [No Leakage, Leakage]
+
